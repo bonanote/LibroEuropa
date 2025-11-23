@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Diarios de Suiza 1972-1975</title>
+    
+    <!-- Librería Page Flip -->
+    <script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.min.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Lora:ital,wght@0,400;0,700;1,400&family=Caveat:wght@700&display=swap');
+
+        * { 
+            box-sizing: border-box; 
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #1a1a1a; 
+            margin: 0; 
+            min-height: 100vh;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center;
+            font-family: 'Lora', serif; 
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            gap: 30px;
+        }
+
+        /* Contenedor del libro - CRÍTICO para el funcionamiento */
+        .book-container {
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            background: #000;
+            position: relative;
+        }
+
+        /* Las páginas deben ser elementos hijos directos del book-container */
+        .page {
+            background-color: #fffef0; 
+            border: 1px solid #ccc; 
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .page-content {
+            padding: 55px 45px; 
+            height: 100%; 
+            display: flex; 
+            flex-direction: column;
+            justify-content: flex-start;
+            overflow: hidden;
+        }
+
+        /* Tipografía */
+        p { 
+            font-size: 0.95rem; 
+            line-height: 1.6; 
+            text-align: justify; 
+            margin-bottom: 15px; 
+            color: #222; 
+            word-wrap: break-word; 
+        }
+        
+        .header {
+            font-family: 'Cinzel', serif; 
+            font-weight: bold; 
+            border-bottom: 2px solid #444;
+            margin-bottom: 25px; 
+            text-align: center; 
+            font-size: 1.1rem; 
+            padding-bottom: 8px;
+            color: #111;
+        }
+        
+        .handwritten {
+            font-family: 'Caveat', cursive; 
+            font-size: 2rem; 
+            color: #003366;
+            text-align: right; 
+            margin-top: 20px;
+        }
+
+        /* Fotos */
+        .photo-frame {
+            width: 100%; 
+            height: 260px; 
+            background: #f4f4f4; 
+            border: 6px solid #fff;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.15); 
+            margin: 25px auto;
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            overflow: hidden;
+            transform: rotate(-0.5deg);
+        }
+        .photo-frame img {
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            filter: sepia(15%) contrast(110%);
+        }
+        .caption { 
+            font-size: 0.8rem; 
+            text-align: center; 
+            color: #666; 
+            font-style: italic; 
+            margin-top: 8px; 
+        }
+
+        /* Portada */
+        .cover {
+            background-color: #2c3e50; 
+            color: #fff; 
+            padding: 40px;
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between;
+        }
+        .title {
+            font-family: 'Cinzel', serif; 
+            font-size: 3rem; 
+            line-height: 1.1;
+            text-align: center; 
+            font-weight: 700; 
+            margin-top: 20px;
+            letter-spacing: 2px;
+        }
+        .subtitle {
+            font-family: 'Lora', serif; 
+            font-size: 1.1rem; 
+            text-align: center; 
+            font-style: italic; 
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+        .cover-img {
+            flex-grow: 1; 
+            margin: 30px 0; 
+            border: 4px solid #fff; 
+            background: #000;
+            overflow: hidden; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+        .cover-img img {
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            filter: grayscale(100%) sepia(40%) hue-rotate(180deg) saturate(150%) contrast(120%);
+        }
+
+        /* Navegación - POSICIONADO FUERA DEL LIBRO */
+        .controls-container {
+            display: flex; 
+            justify-content: center; 
+            gap: 40px;
+            width: 100%;
+            max-width: 550px;
+            margin-top: 20px;
+        }
+        
+        .nav-btn {
+            background: #f5c518; 
+            border: 2px solid #fff; 
+            padding: 15px 45px;
+            font-family: 'Cinzel', serif; 
+            font-weight: bold; 
+            font-size: 1rem;
+            border-radius: 50px; 
+            cursor: pointer; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.6);
+            color: #000; 
+            transition: transform 0.1s;
+            min-width: 140px;
+            text-align: center;
+        }
+        .nav-btn:active { transform: scale(0.95); background: #e0b000; }
+
+        .page-num {
+            position: absolute; 
+            top: 25px; 
+            right: 25px;
+            font-family: 'Cinzel', serif; 
+            font-weight: bold; 
+            color: #999; 
+            font-size: 0.9rem;
+        }
+
+        /* Buscador */
+        .search-box { 
+            width: 100%; 
+            padding: 12px; 
+            font-size: 1rem; 
+            margin-bottom: 15px; 
+            font-family: 'Lora'; 
+            border:2px solid #333; 
+            box-sizing: border-box; 
+        }
+        .search-list { 
+            list-style: none; 
+            padding: 0; 
+            margin: 0; 
+        }
+        .search-list li {
+            background: #eee; 
+            padding: 10px; 
+            margin-bottom: 5px; 
+            cursor: pointer; 
+            font-size: 0.9rem; 
+            border-bottom:1px solid #ddd;
+        }
+        .index-list { 
+            list-style: none; 
+            padding: 0; 
+        }
+        .index-list li {
+            padding: 15px 0; 
+            border-bottom: 1px dashed #ccc; 
+            cursor: pointer;
+            font-weight: bold; 
+            font-family: 'Cinzel', serif; 
+            font-size: 0.95rem;
+        }
+        .index-list li:hover { color: #d35400; }
+        .index-num { float: right; color: #777; }
+
+        /* --- MEDIA QUERIES PARA IPHONE --- */
+        @media only screen and (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            
+            .main-container {
+                gap: 20px;
+            }
+            
+            .book-container {
+                width: 88vw !important; 
+                height: 70vh !important;
+            }
+            
+            .page-content {
+                padding: 20px 25px !important; 
+            }
+            
+            .cover { 
+                padding: 20px; 
+            }
+            
+            .title { 
+                font-size: 1.8rem !important; 
+            }
+            
+            p { 
+                font-size: 0.85rem !important; 
+            } 
+            
+            .header {
+                font-size: 1rem;
+            }
+            
+            .photo-frame { 
+                height: 150px !important; 
+            }
+            
+            .controls-container { 
+                gap: 20px; 
+            }
+            
+            .nav-btn { 
+                padding: 12px 25px; 
+                font-size: 0.85rem; 
+                min-width: 120px;
+            }
+            
+            .page-num { 
+                top: 15px; 
+                right: 15px; 
+            }
+            
+            .handwritten {
+                font-size: 1.6rem;
+            }
+        }
+
+        @media only screen and (max-width: 900px) and (orientation: landscape) {
+            .book-container {
+                height: 75vh !important;
+                width: 60vh !important; 
+            }
+            
+            .page-content { 
+                padding: 20px 20px !important; 
+            }
+            
+            p { 
+                font-size: 0.75rem !important; 
+            }
+            
+            .photo-frame { 
+                height: 120px !important; 
+            }
+            
+            .controls-container { 
+                gap: 30px;
+            }
+            
+            .nav-btn { 
+                padding: 10px 20px; 
+            }
+            
+            .title {
+                font-size: 2rem !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <div id="book" class="book-container">
+            <!-- Las páginas deben estar directamente dentro del contenedor del libro -->
+            <!-- PÁGINA 0: PORTADA -->
+            <div class="page cover" data-density="hard">
+                <div>
+                    <div class="title">DIARIOS DE<br>SUIZA<br>1972-1975</div>
+                    <div class="subtitle">Cartas de un viaje iniciático</div>
+                </div>
+                <div class="cover-img"><img src="LibroEuropa/portada.png" alt="FOTO PORTADA"></div>
+                <div style="text-align:center; font-family:'Cinzel'; font-size:1.5rem; font-weight:bold;">GUILLERMO BONA</div>
+            </div>
+
+            <!-- Pág 1: Blanco -->
+            <div class="page" data-density="soft"></div>
+
+            <!-- PÁGINA 2: ÍNDICE -->
+            <div class="page" data-density="soft">
+                <div class="page-content">
+                    <div class="header">ÍNDICE</div>
+                    <ul class="index-list">
+                        <li onclick="flip(4)">I. Llegada a Estocolmo <span class="index-num">4</span></li>
+                        <li onclick="flip(9)">II. Visita a Gotemburgo y SKF <span class="index-num">9</span></li>
+                        <li onclick="flip(15)">III. Resumen y Despedida <span class="index-num">15</span></li>
+                        <li onclick="flip(20)">IV. Llegada a Zurich <span class="index-num">20</span></li>
+                        <li onclick="flip(26)">V. Mudanza a Winterthur <span class="index-num">26</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- PÁGINA 3: BUSCADOR -->
+            <div class="page" data-density="soft">
+                <div class="page-content">
+                    <div class="header">BUSCADOR</div>
+                    <p>Escriba una palabra clave para buscar en el diario.</p>
+                    <input type="text" id="sInput" class="search-box" placeholder="Buscar..." onkeyup="search()" onmousedown="stop(event)" ontouchstart="stop(event)">
+                    <ul id="sList" class="search-list" onmousedown="stop(event)" ontouchstart="stop(event)"></ul>
+                </div>
+            </div>
+
+            <!-- CARTA 1: LLEGADA A ESTOCOLMO (Páginas 4-8) -->
+            <div class="page" data-density="soft"><div class="page-num">4</div><div class="page-content">
+                <div class="header">11 de Febrero - Estocolmo</div>
+                <p>11/2/72<br>Queridos mami, papi y Nelito:</p>
+                <p>El vuelo fue muy bueno, la única es que dan demasiado para comer. Europa está todo nublado, desde Lisboa hasta acá. En Zurich cuando el avión pasó las nubes para aterrizar pude ver un poco de Suiza (no hay nieve en los campos; en la montaña sí) el aeropuerto es increíble!</p>
+                <p>En Copenhagen había muchísima niebla y aterrizamos con radar, desde la pista ni se veía el aeropuerto. Acá en Suecia nevó ayer y está todo blanco. El viaje de Arlanda hasta Estocolmo es lindísimo lo único que no tenía nieve era la ruta. Cuando llegué a Arlanda en un estante que dice "Information" había una nota de la amiga de Nick con la dirección del hotel.</p>
+            </div></div>
+
+            <div class="page" data-density="soft"><div class="page-num">5</div><div class="page-content">
+                <p>Me tomé el ómnibus y después un taxi que me costó 1600$ (un afano!). Acá en el hotel me dejó una carta diciendo que la llame por teléfono. Estoy en pleno centro (más o menos la calle Florida de Estocolmo). es una pieza de 3m x 7m 1 cama 1 escritorio 1 ropero 1 lavatorio, tiene una ventana que da a la calle. Llegué a las 4hs me lavé y esperé hasta las cinco y media para llamar a la amiga de Nick. La llamé y es una señora macanuda y me invitó a almorzar mañana con ella.</p>
+                <div class="photo-frame"><img src="LibroEuropa/foto1.png" alt="FOTO ESTOCOLMO"></div>
+                <div class="caption">Centro de Estocolmo</div>
+            </div></div>
+
+            <!-- ... resto de las páginas ... -->
+            <div class="page" data-density="soft"><div class="page-num">6</div><div class="page-content">
+                <p>A las seis (plena noche) bajé a comer comí bien pero me costó 3.500$ (otro afano) Mañana voy a ver si compro algo para comer acá porque si no me fondo en tres días. El hotel creo que cuesta 10 coronas (8000$) es barato (en comparación) y es limpísimo. Después de comer salí a dar una vuelta, la temperatura es de -2 C° pero yo no siento mucho frío. Los negocios son lindísimos, muy limpios y bien ordenados.</p>
+                <p>Acá la gente está toda loca ¡cruzan por la esquina y con el semáforo! Lo que sí es que si encuentro un tipo que tenga el pelo más corto que la altura de los hombros le pago una cena con vino, lomo y café porque estoy seguro que no hay uno solo.</p>
+            </div></div>
+
+            <div class="page" data-density="soft"><div class="page-num">7</div><div class="page-content">
+                <p>Es increíble pero hay una cantidad de roñosos y melenudos que no salgo del asombro, y eso que estuve paseando 20 minutos nada más. Recién cuando caminaba pasó un tipo por la vereda de enfrente que tenía por lo menos 4 inyecciones de heroína, gritaba, corría, se paraba, puteaba a la gente en sueco; y tenía como máximo 20 años. Después por todos lados hay tipos con cara de drogados, probablemente porque es de noche, pero sin embargo hay muchísima gente en la calle.</p>
+            </div></div>
+
+            <div class="page" data-density="soft"><div class="page-num">8</div><div class="page-content">
+                <p>Antes que salude otra cosa, te dicen gracias (Tak) por cualquier cosa, si a un tipo lo pateás te dice Tak, son muy amables.</p>
+                <div class="handwritten">Guillermo</div>
+            </div></div>
+
+            <!-- ... continúan las demás páginas ... -->
+
+            <!-- CONTRATAPA -->
+            <div class="page cover" data-density="hard" style="border-left:5px solid #c49000; border-right:none;">
+                <div style="border:2px solid #fff; padding:10px; text-align:center;">ARCHIVO FAMILIAR BONA</div>
+                <div style="text-align:center; margin:auto; font-style:italic;">"Desde que nací es la cosa más feliz que me aconteció."</div>
+                <div style="text-align:center; font-weight:bold;">DIGITALIZADO 2025</div>
+            </div>
+        </div>
+
+        <!-- CONTROLES FUERA DEL LIBRO -->
+        <div class="controls-container">
+            <button class="nav-btn" id="prev">ANTERIOR</button>
+            <button class="nav-btn" id="next">SIGUIENTE</button>
+        </div>
+    </div>
+
+    <script>
+        let pageFlip;
+        const pageTexts = {
+            4: "vuelo comida europa nublado zurich avion nieve campos montaña aeropuerto copenhagen niebla suecia arlanda estocolmo",
+            6: "hotel carta telefono centro cama escritorio ropero lavatorio ventana calle 1600 taxi",
+            // ... resto del objeto pageTexts
+        };
+
+        function search() {
+            let q = document.getElementById('sInput').value.toLowerCase();
+            let l = document.getElementById('sList'); l.innerHTML = '';
+            if(q.length<3) return;
+            for(let [p,t] of Object.entries(pageTexts)) {
+                if(t.includes(q)) {
+                    let li = document.createElement('li'); li.innerText = 'Ir a Pág ' + p;
+                    li.onclick = (e) => { stop(e); flip(parseInt(p)); };
+                    l.appendChild(li);
+                }
+            }
+        }
+
+        function stop(e) { e.stopPropagation(); }
+        function flip(n) { 
+            if(pageFlip) {
+                pageFlip.flip(n); 
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const el = document.getElementById('book');
+            
+            // Calcular dimensiones según el dispositivo
+            const isMobile = window.innerWidth <= 600;
+            const isLandscape = window.innerWidth > window.innerHeight;
+            
+            let width, height;
+            
+            if (isMobile) {
+                if (isLandscape) {
+                    // iPhone landscape
+                    width = Math.min(500, window.innerWidth * 0.7);
+                    height = window.innerHeight * 0.75;
+                } else {
+                    // iPhone portrait
+                    width = window.innerWidth * 0.88;
+                    height = window.innerHeight * 0.7;
+                }
+            } else {
+                // Desktop/iPad
+                width = 550;
+                height = 780;
+            }
+            
+            // INICIALIZACIÓN CRÍTICA DEL PAGE FLIP
+            pageFlip = new St.PageFlip(el, {
+                width: width, 
+                height: height, 
+                size: 'fixed',
+                minWidth: 300, 
+                maxWidth: 800, 
+                minHeight: 400, 
+                maxHeight: 1000,
+                showCover: true,
+                mobileScrollSupport: false,
+                useMouseEvents: true,
+                usePortrait: true,
+                maxShadowOpacity: 0.1, // Un poco de sombra para realismo
+                drawShadow: true,
+                flippingTime: 500, // Tiempo de animación
+            });
+            
+            // Cargar las páginas - MÉTODO CORRECTO
+            pageFlip.loadFromHTML(document.querySelectorAll('.page'));
+            
+            // Event listeners para los botones
+            document.getElementById('prev').addEventListener('click', () => {
+                pageFlip.flipPrev();
+            });
+            
+            document.getElementById('next').addEventListener('click', () => {
+                pageFlip.flipNext();
+            });
+            
+            // Manejar cambios de orientación y resize
+            window.addEventListener('resize', function() {
+                const isMobileNow = window.innerWidth <= 600;
+                const isLandscapeNow = window.innerWidth > window.innerHeight;
+                
+                let newWidth, newHeight;
+                
+                if (isMobileNow) {
+                    if (isLandscapeNow) {
+                        newWidth = Math.min(500, window.innerWidth * 0.7);
+                        newHeight = window.innerHeight * 0.75;
+                    } else {
+                        newWidth = window.innerWidth * 0.88;
+                        newHeight = window.innerHeight * 0.7;
+                    }
+                } else {
+                    newWidth = 550;
+                    newHeight = 780;
+                }
+                
+                // Actualizar dimensiones del libro
+                if(pageFlip) {
+                    pageFlip.updateDimensions(newWidth, newHeight);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
