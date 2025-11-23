@@ -2,8 +2,8 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <!-- Viewport crítico: user-scalable=no evita zoom accidental, width=device-width ajusta al ancho real -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Improved viewport settings for iPhone -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Diarios de Suiza 1972-1975</title>
     
     <!-- Librería Page Flip -->
@@ -13,7 +13,11 @@
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Lora:ital,wght@0,400;0,700;1,400&family=Caveat:wght@700&display=swap');
 
         /* --- RESET BÁSICO --- */
-        * { box-sizing: border-box; }
+        * { 
+            box-sizing: border-box; 
+            margin: 0;
+            padding: 0;
+        }
 
         /* --- ESTILOS GENERALES --- */
         body {
@@ -27,6 +31,8 @@
             justify-content: center;
             font-family: 'Lora', serif; 
             overflow: hidden;
+            padding: 0;
+            -webkit-text-size-adjust: 100%; /* Prevent font scaling in landscape */
         }
 
         /* Contenedor del libro */
@@ -37,6 +43,9 @@
             /* Ajustes Base PC/iPad */
             max-width: 95vw;
             max-height: 95vh;
+            /* iPhone-specific fixes */
+            width: 100%;
+            height: 100%;
         }
 
         .page {
@@ -52,6 +61,8 @@
             display: flex; 
             flex-direction: column;
             justify-content: flex-start; 
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
         }
 
         /* Tipografía */
@@ -62,6 +73,7 @@
             margin-bottom: 15px; 
             color: #222; 
             word-wrap: break-word; 
+            hyphens: auto; /* Better text wrapping */
         }
         
         .header {
@@ -158,9 +170,15 @@
 
         /* Navegación Flotante */
         .controls-container {
-            position: fixed; bottom: 25px; left: 0; width: 100%;
-            display: flex; justify-content: center; gap: 40px;
-            z-index: 10000; pointer-events: none;
+            position: fixed; 
+            bottom: 25px; 
+            left: 0; 
+            width: 100%;
+            display: flex; 
+            justify-content: center; 
+            gap: 40px;
+            z-index: 10000; 
+            pointer-events: none;
         }
         
         .nav-btn {
@@ -180,67 +198,176 @@
         .nav-btn:active { transform: scale(0.95); background: #e0b000; }
 
         .page-num {
-            position: absolute; top: 25px; right: 25px;
-            font-family: 'Cinzel', serif; font-weight: bold; color: #999; font-size: 0.9rem;
+            position: absolute; 
+            top: 25px; 
+            right: 25px;
+            font-family: 'Cinzel', serif; 
+            font-weight: bold; 
+            color: #999; 
+            font-size: 0.9rem;
         }
 
         /* Buscador */
-        .search-box { width: 100%; padding: 12px; font-size: 1rem; margin-bottom: 15px; font-family: 'Lora'; border:2px solid #333; box-sizing: border-box; }
-        .search-list { list-style: none; padding: 0; margin: 0; }
-        .search-list li {
-            background: #eee; padding: 10px; margin-bottom: 5px; cursor: pointer; font-size: 0.9rem; border-bottom:1px solid #ddd;
+        .search-box { 
+            width: 100%; 
+            padding: 12px; 
+            font-size: 1rem; 
+            margin-bottom: 15px; 
+            font-family: 'Lora'; 
+            border:2px solid #333; 
+            box-sizing: border-box; 
         }
-        .index-list { list-style: none; padding: 0; }
+        .search-list { 
+            list-style: none; 
+            padding: 0; 
+            margin: 0; 
+        }
+        .search-list li {
+            background: #eee; 
+            padding: 10px; 
+            margin-bottom: 5px; 
+            cursor: pointer; 
+            font-size: 0.9rem; 
+            border-bottom:1px solid #ddd;
+        }
+        .index-list { 
+            list-style: none; 
+            padding: 0; 
+        }
         .index-list li {
-            padding: 15px 0; border-bottom: 1px dashed #ccc; cursor: pointer;
-            font-weight: bold; font-family: 'Cinzel', serif; font-size: 0.95rem;
+            padding: 15px 0; 
+            border-bottom: 1px dashed #ccc; 
+            cursor: pointer;
+            font-weight: bold; 
+            font-family: 'Cinzel', serif; 
+            font-size: 0.95rem;
         }
         .index-list li:hover { color: #d35400; }
         .index-num { float: right; color: #777; }
 
         /* --- CORRECCIÓN CRÍTICA PARA IPHONE (Vertical) --- */
         @media only screen and (max-width: 600px) {
+            body {
+                padding: 10px 0; /* Add safe padding */
+                height: auto;
+                min-height: 100vh;
+            }
+            
             .book-container {
                 /* CORRECCIÓN: Ancho reducido al 88% para asegurar márgenes negros a los lados */
                 width: 88vw !important; 
                 height: 80vh !important;
-                margin-top: -40px; 
+                margin-top: 0; 
+                max-width: 88vw;
+                max-height: 80vh;
             }
+            
             .page-content {
                 /* CORRECCIÓN: Aumento de padding lateral a 30px para alejar texto del borde */
-                padding: 30px 30px; 
+                padding: 20px 25px !important; 
+                overflow-y: auto;
             }
-            .cover { padding: 20px; }
-            .title { font-size: 2rem; }
+            
+            .cover { 
+                padding: 20px; 
+            }
+            
+            .title { 
+                font-size: 1.8rem !important; 
+                line-height: 1.2;
+            }
             
             /* CORRECCIÓN: Fuente ligeramente más pequeña para iPhone */
-            p { font-size: 0.85rem; text-align: left; } 
+            p { 
+                font-size: 0.85rem !important; 
+                text-align: left; 
+                margin-bottom: 12px;
+            } 
             
-            .photo-frame { height: 180px; margin: 10px auto; }
-            .controls-container { bottom: 15px; gap: 20px; }
-            .nav-btn { padding: 10px 30px; font-size: 0.85rem; }
-            .page-num { top: 15px; right: 15px; font-size: 0.8rem; }
+            .header {
+                font-size: 1rem;
+                margin-bottom: 15px;
+            }
+            
+            .photo-frame { 
+                height: 150px !important; 
+                margin: 15px auto; 
+            }
+            
+            .controls-container { 
+                bottom: 15px; 
+                gap: 20px; 
+            }
+            
+            .nav-btn { 
+                padding: 12px 25px; 
+                font-size: 0.85rem; 
+            }
+            
+            .page-num { 
+                top: 15px; 
+                right: 15px; 
+                font-size: 0.8rem; 
+            }
+            
+            .handwritten {
+                font-size: 1.6rem;
+            }
         }
 
         /* --- CORRECCIÓN CRÍTICA PARA IPHONE (Horizontal / Landscape) --- */
         @media only screen and (max-width: 900px) and (orientation: landscape) {
+            body {
+                padding: 5px 0;
+            }
+            
             .book-container {
                 /* En horizontal, limitamos por altura y ancho */
                 height: 85vh !important;
                 width: 60vh !important; 
                 max-width: 45vw; 
             }
-            .page-content { padding: 25px 25px; } /* Padding seguro */
-            p { font-size: 0.8rem; margin-bottom: 10px; }
-            .photo-frame { height: 140px; margin: 10px auto; }
-            .controls-container { 
-                bottom: 50%; transform: translateY(50%); 
-                width: 100%; justify-content: space-between; 
-                padding: 0 20px; pointer-events: none;
+            
+            .page-content { 
+                padding: 20px 20px !important; 
             }
-            .nav-btn { pointer-events: auto; padding: 10px 20px; opacity: 0.8; }
+            
+            p { 
+                font-size: 0.75rem !important; 
+                margin-bottom: 8px; 
+            }
+            
+            .photo-frame { 
+                height: 120px !important; 
+                margin: 10px auto; 
+            }
+            
+            .controls-container { 
+                bottom: 50%; 
+                transform: translateY(50%); 
+                width: 100%; 
+                justify-content: space-between; 
+                padding: 0 20px; 
+                pointer-events: none;
+            }
+            
+            .nav-btn { 
+                pointer-events: auto; 
+                padding: 10px 20px; 
+                opacity: 0.8; 
+            }
+            
+            .title {
+                font-size: 2rem !important;
+            }
         }
 
+        /* iPhone X and newer safe area support */
+        @supports(padding: max(0px)) {
+            .controls-container {
+                padding-bottom: max(25px, env(safe-area-inset-bottom));
+            }
+        }
     </style>
 </head>
 <body>
@@ -354,17 +481,17 @@
         </div></div>
 
         <div class="page" data-density="soft"><div class="page-num">16</div><div class="page-content">
-            <p>A la noche me fui a dormir porque no daba más. El jueves dormí hasta tarde, después paseé por la ciudad a pie y a la noche fuimos a comer a la casa de Charlotte que vive con el novio y es un tipo muy simpático y con mucho sentido del humor, nos divertimos muchísimo. El viernes fui a comprar algunas cosas (un teleobjetivo y otras chiches para la máquina). A la tarde fuimos a comer a la casa de Anita que estuvo muy contenta con los jabones pero Suecia no le gusta mucho. Estoy comiendo pescado como loco.</p>
+            <p>A la noche me fui a dormir porque no daba más. El jueves dormí hasta tarde, después paseé por la ciudad a pie y a la night fuimos a comer a la casa de Charlotte que vive con el novio y es un tipo muy simpático y con mucho sentido del humor, nos divertimos muchísimo. El viernes fui a comprar algunas cosas (un teleobjetivo y otras chiches para la máquina). A la tarde fuimos a comer a la casa de Anita que estuvo muy contenta con los jabones pero Suecia no le gusta mucho. Estoy comiendo pescado como loco.</p>
         </div></div>
 
         <div class="page" data-density="soft"><div class="page-num">17</div><div class="page-content">
-            <p>el sábado al mediodía fuimos a un restaurante en el puerto (creo que se llama Frederikhavn o algo) con Charlotte y el novio (Lars). A la tarde fui al Scandinavium a ver Jesus Christ Superstar con Bo, Johann y la novia, la entrada me la regaló Anita porque dijo que a ella no le gusta. A la noche fui con Lars y Charlotte a una discoteca para estudiantes de medicina y realmente la pasé muy bien (ya estoy seguro que cuando me case me caso con una sueca).</p>
+            <p>el sábado al mediodía fuimos a un restaurante en el puerto (creo que se llama Frederikhavn o algo) con Charlotte y el novio (Lars). A la tarde fui al Scandinavium a ver Jesus Christ Superstar con Bo, Johann y la novia, la entrada me la regaló Anita porque dijo que a ella no le gusta. A la night fui con Lars y Charlotte a una discoteca para estudiantes de medicina y realmente la pasé muy bien (ya estoy seguro que cuando me case me caso con una sueca).</p>
             <p>El domingo fui con Johann y la novia a recorrer la ciudad, almorcé en la casa de Anita y despues fuimos a la estación a despedir a Anna que volvía a Sigtuna. En la estación había arreglado encontrarme con Gunell y Mr. Gustafson, así que...</p>
         </div></div>
 
         <div class="page" data-density="soft"><div class="page-num">18</div><div class="page-content">
             <p>...Después de la partida fui a tomar un café con ellos Gunell estaba contentísima. Pronto se tiene que operar, creo que de una úlcera. Después seguí con Johann y la novia hasta KUNGSBACKA y volvimos por la costa.</p>
-            <p>A la noche fuimos de nuevo a la casa de Anita a cenar Anita, Gunell (escribile !!!) e Inga te mandan saludos, gracias, augurios de prosperidad y demás afines. Junto con esta mando otra carta con mis detalles espero que lleguen juntas.</p>
+            <p>A la night fuimos de nuevo a la casa de Anita a cenar Anita, Gunell (escribile !!!) e Inga te mandan saludos, gracias, augurios de prosperidad y demás afines. Junto con esta mando otra carta con mis detalles espero que lleguen juntas.</p>
             <div class="handwritten">Saludos Guillermo</div>
             <br>
             <p style="text-align:center; font-size:0.8rem; color:#666;">Lunes 21 - G. Bona - P. IV Göthemburs - Södra Vägen 41 - SWEDEN</p>
@@ -494,17 +621,70 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             const el = document.getElementById('book');
+            
+            // Calculate dimensions based on screen size
+            const isMobile = window.innerWidth <= 600;
+            const isLandscape = window.innerWidth > window.innerHeight;
+            
+            let width, height;
+            
+            if (isMobile) {
+                if (isLandscape) {
+                    // iPhone landscape
+                    width = Math.min(600, window.innerWidth * 0.8);
+                    height = window.innerHeight * 0.85;
+                } else {
+                    // iPhone portrait
+                    width = window.innerWidth * 0.88;
+                    height = window.innerHeight * 0.8;
+                }
+            } else {
+                // Desktop/iPad
+                width = 550;
+                height = 780;
+            }
+            
             pageFlip = new St.PageFlip(el, {
-                width: 550, height: 780, size: 'fixed',
-                minWidth: 300, maxWidth: 1000, minHeight: 400, maxHeight: 1000,
-                showCover: true, mobileScrollSupport: false, // DESACTIVADO PARA EVITAR GLITCH EN IPAD
+                width: width, 
+                height: height, 
+                size: 'fixed',
+                minWidth: 300, 
+                maxWidth: 1000, 
+                minHeight: 400, 
+                maxHeight: 1000,
+                showCover: true, 
+                mobileScrollSupport: false,
                 useMouseEvents: true,
-                maxShadowOpacity: 0 // ELIMINAR SOMBRA NEGRA MOLESTA
+                maxShadowOpacity: 0
             });
             pageFlip.loadFromHTML(document.querySelectorAll('.page'));
             
             document.getElementById('prev').onclick = () => pageFlip.flipPrev();
             document.getElementById('next').onclick = () => pageFlip.flipNext();
+            
+            // Handle orientation changes
+            window.addEventListener('resize', function() {
+                // Recalculate on resize for better iPhone support
+                const isMobileNow = window.innerWidth <= 600;
+                const isLandscapeNow = window.innerWidth > window.innerHeight;
+                
+                let newWidth, newHeight;
+                
+                if (isMobileNow) {
+                    if (isLandscapeNow) {
+                        newWidth = Math.min(600, window.innerWidth * 0.8);
+                        newHeight = window.innerHeight * 0.85;
+                    } else {
+                        newWidth = window.innerWidth * 0.88;
+                        newHeight = window.innerHeight * 0.8;
+                    }
+                } else {
+                    newWidth = 550;
+                    newHeight = 780;
+                }
+                
+                pageFlip.updateDimensions(newWidth, newHeight);
+            });
         });
     </script>
 </body>
