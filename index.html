@@ -201,17 +201,21 @@
         /* --- CORRECCIÓN CRÍTICA PARA IPHONE (Vertical) --- */
         @media only screen and (max-width: 600px) {
             .book-container {
-                /* Reducimos ancho para dejar márgenes negros de seguridad */
-                width: 90vw !important; 
+                /* CORRECCIÓN: Ancho reducido al 88% para asegurar márgenes negros a los lados */
+                width: 88vw !important; 
                 height: 80vh !important;
-                margin-top: -40px; /* Subir un poco para dejar espacio a controles */
+                margin-top: -40px; 
             }
             .page-content {
-                padding: 30px 20px; /* Márgenes internos mínimos */
+                /* CORRECCIÓN: Aumento de padding lateral a 30px para alejar texto del borde */
+                padding: 30px 30px; 
             }
             .cover { padding: 20px; }
             .title { font-size: 2rem; }
-            p { font-size: 0.85rem; text-align: left; } /* Left align evita espacios raros */
+            
+            /* CORRECCIÓN: Fuente ligeramente más pequeña para iPhone */
+            p { font-size: 0.85rem; text-align: left; } 
+            
             .photo-frame { height: 180px; margin: 10px auto; }
             .controls-container { bottom: 15px; gap: 20px; }
             .nav-btn { padding: 10px 30px; font-size: 0.85rem; }
@@ -221,16 +225,15 @@
         /* --- CORRECCIÓN CRÍTICA PARA IPHONE (Horizontal / Landscape) --- */
         @media only screen and (max-width: 900px) and (orientation: landscape) {
             .book-container {
-                /* En horizontal, la altura es el limitante. Ajustamos al 85% del alto */
+                /* En horizontal, limitamos por altura y ancho */
                 height: 85vh !important;
-                width: 60vh !important; /* Mantener proporción aspecto libro */
-                max-width: 45vw; /* Asegurar que no ocupe toda la pantalla */
+                width: 60vh !important; 
+                max-width: 45vw; 
             }
-            .page-content { padding: 25px 20px; }
+            .page-content { padding: 25px 25px; } /* Padding seguro */
             p { font-size: 0.8rem; margin-bottom: 10px; }
             .photo-frame { height: 140px; margin: 10px auto; }
             .controls-container { 
-                /* Mover controles a los lados en landscape */
                 bottom: 50%; transform: translateY(50%); 
                 width: 100%; justify-content: space-between; 
                 padding: 0 20px; pointer-events: none;
@@ -436,7 +439,7 @@
 
         <!-- CONTRATAPA -->
         <div class="page cover" data-density="hard" style="border-left:5px solid #c49000; border-right:none;">
-            <div style="border:2px solid #111; padding:10px; text-align:center;">ARCHIVO FAMILIAR BONA</div>
+            <div style="border:2px solid #fff; padding:10px; text-align:center;">ARCHIVO FAMILIAR BONA</div>
             <div style="text-align:center; margin:auto; font-style:italic;">"Desde que nací es la cosa más feliz que me aconteció."</div>
             <div style="text-align:center; font-weight:bold;">DIGITALIZADO 2025</div>
         </div>
@@ -453,30 +456,24 @@
         // Datos simples para el buscador
         const pageTexts = {
             4: "vuelo comida europa nublado zurich avion nieve campos montaña aeropuerto copenhagen niebla suecia arlanda estocolmo",
-            5: "information nota amiga nick direccion hotel omnibus taxi 1600 afano",
-            6: "carta telefono centro florida pieza 3m 7m cama escritorio ropero lavatorio ventana calle 4hs 5 y media señora macanuda almorzar 6 noche 3500",
-            7: "fondo 3 dias 10 coronas 8000 barato limpisimo temperatura -2 frio negocios limpios ordenados gente loca semaforo",
-            8: "pelo corto hombros cena vino lomo cafe increible roñosos melenudos asombro 20 minutos heroina inyecciones gritaba corria",
-            9: "15 de febrero gotemburgo martes 15/2/72 sabado restaurant 25 años vuelta centro compromisos cansado television olimpiadas sapporo wasa skansen smorgasbord",
-            10: "lunes avion demora goma pinchada torslanda inga anna comida china fabrica skf",
-            11: "ciudades buenos aires borrachos techo fin de semana subtes transporte organizado secretaria holmqvist",
-            12: "paquete gruffman bo overgaard contento macanudo trabajo erlenson fabrica bolillas jaulas montaje cederwall",
-            13: "hospitalidad suizo piola tarjeta zurich copenhague jensen quinoto fe pais parientes",
-            14: "plata amarrocar kilos vitaminas",
-            15: "21 de febrero resumen semanal visita fabrica miercoles johann cederwall auto molndal frolunda torg gota alv gunnebo castillo",
-            16: "jueves paseo charlotte novio simpatico viernes teleobjetivo chiches anita jabones",
-            17: "sabado puerto frederikhaven lars scandinavium jesus christ superstar discoteca medicina domingo estacion despedir anna",
-            18: "aerograma lunes 21 gunell ulcera kungsbacka costa",
-            20: "22 de febrero zurich martes 22/2/72 carta 4 6.20 trudy saab departamento cama nelo jack registro militar",
-            21: "pruebas test comprension frances 20 de marzo 15 de abril rechazado servicio febrero 73 julio 73 bs as gobierno pasaje",
-            22: "optimistamente 1 mes spichiger 2hs vuelta opinion suiza francesa neuchatel lausanne ginebra colegio crash-course",
-            23: "precios trabajo post-boy lavaplatos pinche",
-            24: "plata 4000 francos experiencia marca mayor feliz acontecio",
-            25: "in god i trust guillermo bonasson palmstrasse",
-            26: "29 de febrero winterthur martes 29/2/72 tren mercedes benz lenzburg solothurn berna neuchatel oficina ringger berlitz",
-            27: "pension foyer de vidy bungalows madera teja calefaccion toalla comida barata",
-            28: "13 dias jack antipatico",
-            29: "datos curso francos henri hans"
+            6: "hotel carta telefono centro cama escritorio ropero lavatorio ventana calle 1600 taxi",
+            7: "comer precio hotel barato limpio frio negocios gente loca semaforo pelo largo cena vino lomo heroina",
+            8: "gotemburgo sabado restaurant amiga nick centro compromisos hotel dormir television olimpiadas sapporo wasa skansen",
+            9: "arlanda avion demora goma pinchada torslanda inga anna comida china fabrica skf",
+            10: "borrachos transporte tranvia holmqvist gruffman bo overgaard trabajo fabrica bolillas jaulas montaje",
+            11: "cederwall causé buena impresion nelo hospitalidad",
+            12: "jensen quinoto fe pais parientes plata papi mami johann resumen",
+            13: "molndal frolunda torg gota alv gunnebo castillo charlotte novio",
+            14: "anita jabones puerto lars jesus christ superstar discoteca medicina",
+            15: "estacion gunell aerograma operacion ulcera kungsbacka",
+            16: "zurich trudy saab departamento cama nelo jack registro militar",
+            17: "frances pruebas rechazo",
+            18: "spichiger suiza francesa neuchatel lausanne ginebra crash-course",
+            19: "precios dinero papi experiencia feliz",
+            20: "winterthur tren mercedes benz lenzburg solothurn berna neuchatel oficina ringger berlitz",
+            21: "pension foyer de vidy bungalows madera teja calefaccion",
+            22: "toalla comida barata 13 dias",
+            23: "jack antipatico datos curso francos"
         };
 
         function search() {
@@ -500,9 +497,9 @@
             pageFlip = new St.PageFlip(el, {
                 width: 550, height: 780, size: 'fixed',
                 minWidth: 300, maxWidth: 1000, minHeight: 400, maxHeight: 1000,
-                showCover: true, mobileScrollSupport: false, // Fix para iPad
-                useMouseEvents: false, // Desactivado para evitar glitch
-                maxShadowOpacity: 0 // Elimina sombra fantasma
+                showCover: true, mobileScrollSupport: false, // DESACTIVADO PARA EVITAR GLITCH EN IPAD
+                useMouseEvents: true,
+                maxShadowOpacity: 0 // ELIMINAR SOMBRA NEGRA MOLESTA
             });
             pageFlip.loadFromHTML(document.querySelectorAll('.page'));
             
