@@ -6,16 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Diarios de Suiza 1972-1975</title>
     
-    <!-- Cargar librería de flip -->
+    <!-- Librería Page Flip -->
     <script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.min.js"></script>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Lora:ital,wght@0,400;0,700;1,400&family=Caveat:wght@700&display=swap');
-
-        /* --- RESET BÁSICO PARA EVITAR CORTES --- */
-        * {
-            box-sizing: border-box;
-        }
 
         /* --- ESTILOS GENERALES --- */
         body {
@@ -51,6 +46,7 @@
         .page-content {
             padding: 55px 45px; /* Margen estándar PC/iPad */
             height: 100%; 
+            box-sizing: border-box; /* CRÍTICO: Evita que el padding aumente el ancho */
             display: flex; 
             flex-direction: column;
             justify-content: flex-start; 
@@ -168,7 +164,7 @@
             pointer-events: auto; 
             background: #f5c518; 
             border: 2px solid #fff; 
-            padding: 15px 45px;
+            padding: 15px 40px;
             font-family: 'Cinzel', serif; 
             font-weight: bold; 
             font-size: 1rem;
@@ -186,7 +182,8 @@
         }
 
         /* Buscador */
-        .search-box { width: 100%; padding: 12px; font-size: 1rem; margin-bottom: 15px; font-family: 'Lora'; border:2px solid #333; }
+        .search-box { width: 100%; padding: 12px; font-size: 1rem; margin-bottom: 15px; font-family: 'Lora'; border:2px solid #333; box-sizing: border-box; }
+        .search-list { list-style: none; padding: 0; margin: 0; }
         .search-list li {
             background: #eee; padding: 10px; margin-bottom: 5px; cursor: pointer; font-size: 0.9rem; border-bottom:1px solid #ddd;
         }
@@ -201,24 +198,24 @@
         /* --- CORRECCIÓN CRÍTICA PARA IPHONE --- */
         @media only screen and (max-width: 600px) {
             .book-container {
-                /* Ancho reducido al 92% para dejar márgenes laterales negros y que no se corte */
-                width: 92vw !important; 
-                height: 82vh !important;
-                max-width: 92vw;
+                /* Ancho reducido al 95% para dejar márgenes laterales negros y que no se corte */
+                width: 95vw !important; 
+                height: 85vh !important;
+                max-width: 95vw;
             }
             .page-content {
-                /* Padding lateral reducido para ganar espacio para el texto */
-                padding: 30px 25px; 
+                /* REDUCCIÓN DE MÁRGENES: Clave para que el texto no se corte en iPhone */
+                padding: 40px 25px; 
             }
             .cover {
-                padding: 20px;
+                padding: 25px;
             }
             .title {
-                font-size: 2rem;
+                font-size: 2.2rem;
             }
             /* Fuente un poco más chica para asegurar que palabras largas no corten */
             p {
-                font-size: 0.85rem; 
+                font-size: 0.9rem; 
             }
             .photo-frame {
                 height: 200px;
@@ -231,6 +228,9 @@
             .nav-btn {
                 padding: 10px 30px;
                 font-size: 0.9rem;
+            }
+            .page-num {
+                top: 15px; right: 15px; font-size: 0.8rem;
             }
         }
 
@@ -259,10 +259,10 @@
                 <div class="header">ÍNDICE</div>
                 <ul class="index-list">
                     <li onclick="flip(4)">I. Llegada a Estocolmo <span class="index-num">4</span></li>
-                    <li onclick="flip(9)">II. Visita a Gotemburgo y SKF <span class="index-num">9</span></li>
-                    <li onclick="flip(15)">III. Resumen y Despedida <span class="index-num">15</span></li>
-                    <li onclick="flip(20)">IV. Llegada a Zurich <span class="index-num">20</span></li>
-                    <li onclick="flip(26)">V. Mudanza a Winterthur <span class="index-num">26</span></li>
+                    <li onclick="flip(10)">II. Visita a Gotemburgo y SKF <span class="index-num">10</span></li>
+                    <li onclick="flip(17)">III. Resumen y Despedida <span class="index-num">17</span></li>
+                    <li onclick="flip(22)">IV. Llegada a Zurich <span class="index-num">22</span></li>
+                    <li onclick="flip(28)">V. Mudanza a Winterthur <span class="index-num">28</span></li>
                 </ul>
             </div>
         </div>
@@ -277,7 +277,7 @@
             </div>
         </div>
 
-        <!-- CARTA 1: LLEGADA A ESTOCOLMO (Páginas 4-8) -->
+        <!-- CARTA 1: LLEGADA A ESTOCOLMO (Páginas 4-9) -->
         <div class="page" data-density="soft"><div class="page-num">4</div><div class="page-content">
             <div class="header">11 de Febrero - Estocolmo</div>
             <p>11/2/72<br>Queridos mami, papi y Nelito:</p>
@@ -328,8 +328,7 @@
         </div></div>
 
         <div class="page" data-density="soft"><div class="page-num">13</div><div class="page-content">
-            <p>No quiero abusar de la hospitalidad. Creo que en Suiza no voy a tener ningún problema con el trabajo. No creo que les dije que en el avión al lado mío se sentó un suizo piola que me dijo una que no hay problema e incluso me dio su tarjeta de Zurich para que lo llame. Creo que no voy a ir a Copenhague porque Jensen vive por la loma del quinoto.</p>
-            <p>Todavía no entiendo como, después de haber visto todo esto (y eso que vi poco), están viviendo en Buenos Aires. Tengo fe en el país, pero… no tanto.</p>
+            <p>No quiero abusar de la hospitalidad. Creo que en Suiza no voy a tener ningún problema con el trabajo. No creo que les dije que en el avión al lado mío se sentó un suizo piola que me dijo una que no hay problema e incluso me dio su tarjeta de Zurich para que lo llame. Creo que no voy a ir a Copenhague porque Jensen vive por la loma del quinoto. Todavía no entiendo como, después de haber visto todo esto (y eso que vi poco), están viviendo en Buenos Aires. Tengo fe en el país, pero… no tanto.</p>
             <p>Mis cartas háganlas circular por la flia, porque les voy a escribir postales a los demás parientes, o quizás una carta de vez en cuando.</p>
         </div></div>
 
@@ -498,7 +497,7 @@
                 width: 550, height: 780, size: 'fixed',
                 minWidth: 300, maxWidth: 1000, minHeight: 400, maxHeight: 1000,
                 showCover: true, mobileScrollSupport: false, // CORRECCION CRITICA IPAD
-                useMouseEvents: true,
+                useMouseEvents: false, // Desactivado para evitar glitch
                 maxShadowOpacity: 0 // ELIMINA SOMBRA FANTASMA
             });
             pageFlip.loadFromHTML(document.querySelectorAll('.page'));
