@@ -1,12 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <!-- Viewport crítico para iPad/iPhone -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Diarios de Suiza 1972-1975</title>
-    
-    <!-- Librería Page Flip -->
     <script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.min.js"></script>
     
     <style>
@@ -28,225 +26,112 @@
             overflow: hidden;
         }
 
-        /* Contenedor del libro */
         .book-container {
             box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-            width: 550px;
-            height: 780px;
-            max-width: 95vw;
-            max-height: 95vh;
+            width: 550px; height: 780px;
+            max-width: 95vw; max-height: 95vh;
         }
 
         .page {
-            background-color: #fffef0; 
-            border: 1px solid #ccc; 
-            overflow: hidden; 
-            position: relative;
+            background-color: #fffef0; border: 1px solid #ccc; overflow: hidden; position: relative;
         }
 
         .page-content {
-            padding: 55px 45px; 
-            height: 100%; 
-            display: flex; 
-            flex-direction: column;
-            justify-content: flex-start; 
+            padding: 55px 45px; height: 100%; display: flex; flex-direction: column; justify-content: flex-start; 
         }
 
         /* Tipografía */
         p { 
-            font-size: 0.92rem; 
-            line-height: 1.55; 
-            text-align: justify; 
-            margin-bottom: 12px; 
-            color: #222; 
-            word-wrap: break-word; 
+            font-size: 0.92rem; line-height: 1.55; text-align: justify; margin-bottom: 12px; color: #222; word-wrap: break-word; 
         }
         
         .header {
-            font-family: 'Cinzel', serif; 
-            font-weight: bold; 
-            border-bottom: 2px solid #444;
-            margin-bottom: 20px; 
-            text-align: center; 
-            font-size: 1.1rem; 
-            padding-bottom: 8px;
-            color: #111;
+            font-family: 'Cinzel', serif; font-weight: bold; border-bottom: 2px solid #444;
+            margin-bottom: 20px; text-align: center; font-size: 1.1rem; padding-bottom: 8px; color: #111;
         }
         
         .handwritten {
-            font-family: 'Caveat', cursive; 
-            font-size: 1.8rem; 
-            color: #003366;
-            text-align: right; 
-            margin-top: 15px;
+            font-family: 'Caveat', cursive; font-size: 1.8rem; color: #003366; text-align: right; margin-top: 15px;
         }
         
+        /* Notas */
         .notes-section {
-            background-color: #f9f9f9;
-            border-left: 4px solid #ccc;
-            padding: 10px;
-            margin-top: 20px;
-            font-size: 0.8rem;
-            color: #444;
+            background-color: #f9f9f9; border-left: 4px solid #ccc; padding: 10px; margin-top: 20px; font-size: 0.8rem; color: #444;
         }
-        
-        .notes-title {
-            font-weight: bold;
-            margin-bottom: 5px;
-            font-family: 'Cinzel', serif;
-            font-size: 0.9rem;
-        }
+        .notes-title { font-weight: bold; margin-bottom: 5px; font-family: 'Cinzel', serif; font-size: 0.9rem; }
+        .note-item { margin-bottom: 5px; }
+        .note-ref { font-weight: bold; }
 
         /* Fotos */
         .photo-frame {
-            width: 100%; 
-            height: 220px; 
-            background: #f4f4f4; 
-            border: 6px solid #fff;
-            box-shadow: 2px 2px 10px rgba(0,0,0,0.15); 
-            margin: 15px auto;
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            overflow: hidden;
-            transform: rotate(-0.5deg);
+            width: 100%; height: 220px; background: #f4f4f4; border: 6px solid #fff;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.15); margin: 15px auto;
+            display: flex; align-items: center; justify-content: center; overflow: hidden; transform: rotate(-0.5deg);
         }
-        .photo-frame img {
-            width: 100%; 
-            height: 100%; 
-            object-fit: cover; 
-            filter: sepia(15%) contrast(110%);
-        }
-        .caption { 
-            font-size: 0.8rem; 
-            text-align: center; 
-            color: #666; 
-            font-style: italic; 
-            margin-top: 5px; 
-        }
+        .photo-frame img { width: 100%; height: 100%; object-fit: cover; filter: sepia(15%) contrast(110%); }
+        .caption { font-size: 0.8rem; text-align: center; color: #666; font-style: italic; margin-top: 5px; }
 
         /* Portada */
         .cover {
-            background-color: #2c3e50; 
-            color: #fff; 
-            padding: 40px;
-            display: flex; 
-            flex-direction: column; 
-            justify-content: space-between;
-            border-right: 8px solid #1a252f;
+            background-color: #2c3e50; color: #fff; padding: 40px;
+            display: flex; flex-direction: column; justify-content: space-between; border-right: 8px solid #1a252f;
         }
-        .title {
-            font-family: 'Cinzel', serif; 
-            font-size: 3rem; 
-            line-height: 1.1;
-            text-align: center; 
-            font-weight: 700; 
-            margin-top: 20px;
-            letter-spacing: 2px;
-        }
-        .subtitle {
-            font-family: 'Lora', serif; 
-            font-size: 1.1rem; 
-            text-align: center; 
-            font-style: italic; 
-            margin-bottom: 20px;
-            opacity: 0.9;
-        }
+        .title { font-family: 'Cinzel', serif; font-size: 3rem; line-height: 1.1; text-align: center; font-weight: 700; margin-top: 20px; letter-spacing: 2px; }
+        .subtitle { font-family: 'Lora', serif; font-size: 1.1rem; text-align: center; font-style: italic; margin-bottom: 20px; opacity: 0.9; }
         .cover-img {
-            flex-grow: 1; 
-            margin: 30px 0; 
-            border: 4px solid #fff; 
-            background: #000;
-            overflow: hidden; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            flex-grow: 1; margin: 30px 0; border: 4px solid #fff; background: #000;
+            overflow: hidden; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 20px rgba(0,0,0,0.3);
         }
-        .cover-img img {
-            width: 100%; 
-            height: 100%; 
-            object-fit: cover; 
-            filter: grayscale(100%) sepia(40%) hue-rotate(180deg) saturate(150%) contrast(120%);
-        }
+        .cover-img img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%) sepia(40%) hue-rotate(180deg) saturate(150%) contrast(120%); }
 
-        /* Navegación Flotante */
+        /* Navegación Minimalista */
         .controls-container {
             position: fixed; bottom: 25px; left: 0; width: 100%;
-            display: flex; justify-content: center; gap: 40px;
-            z-index: 10000; pointer-events: none;
+            display: flex; justify-content: center; gap: 20px; z-index: 10000; pointer-events: none;
         }
         
+        /* Botones Flechas */
         .nav-btn {
-            pointer-events: auto; 
-            background: #f5c518; 
-            border: 2px solid #fff; 
-            padding: 15px 45px;
-            font-family: 'Cinzel', serif; 
-            font-weight: bold; 
-            font-size: 1rem;
-            border-radius: 50px; 
-            cursor: pointer; 
-            box-shadow: 0 5px 15px rgba(0,0,0,0.6);
-            color: #000; 
-            transition: transform 0.1s;
+            pointer-events: auto; background: #f5c518; border: 2px solid #fff;
+            width: 50px; height: 50px; border-radius: 50%;
+            font-size: 1.5rem; font-weight: bold; color: #000;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.6); transition: transform 0.1s;
         }
-        .nav-btn:active { transform: scale(0.95); background: #e0b000; }
-
-        .page-num {
-            position: absolute; top: 25px; right: 25px;
-            font-family: 'Cinzel', serif; font-weight: bold; color: #999; font-size: 0.9rem;
+        
+        /* Botón Índice */
+        .index-btn {
+            pointer-events: auto; background: #2c3e50; color: #fff; border: 2px solid #f5c518;
+            padding: 0 20px; height: 50px; border-radius: 25px;
+            font-family: 'Cinzel', serif; font-weight: bold; font-size: 0.9rem;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.6); transition: transform 0.1s;
         }
 
-        /* Buscador */
-        .search-box { width: 100%; padding: 12px; font-size: 1rem; margin-bottom: 15px; font-family: 'Lora'; border:2px solid #333; box-sizing: border-box; }
-        .search-list { list-style: none; padding: 0; margin: 0; }
-        .search-list li {
-            background: #eee; padding: 10px; margin-bottom: 5px; cursor: pointer; font-size: 0.9rem; border-bottom:1px solid #ddd;
-        }
+        .nav-btn:active, .index-btn:active { transform: scale(0.95); }
+
+        .page-num { position: absolute; top: 25px; right: 25px; font-family: 'Cinzel', serif; font-weight: bold; color: #999; font-size: 0.9rem; }
+
+        /* Índice */
         .index-list { list-style: none; padding: 0; }
         .index-list li {
             padding: 10px 0; border-bottom: 1px dashed #ccc; cursor: pointer;
-            font-weight: bold; font-family: 'Cinzel', serif; font-size: 0.85rem; /* Letra un poco más chica para que entre todo */
+            font-weight: bold; font-family: 'Cinzel', serif; font-size: 0.85rem;
         }
         .index-list li:hover { color: #d35400; }
         .index-num { float: right; color: #777; }
 
-        /* --- CORRECCIÓN ESPECÍFICA PARA IPHONE (Márgenes) --- */
+        /* iPhone Fix */
         @media only screen and (max-width: 600px) {
-            .book-container {
-                width: 90vw !important; 
-                height: 80vh !important;
-                margin-top: -30px; 
-            }
-            .page-content {
-                padding: 35px 30px; /* Margen seguro */
-            }
-            .cover {
-                padding: 20px;
-            }
-            .title {
-                font-size: 2rem;
-            }
-            p {
-                font-size: 0.9rem; 
-                text-align: left; 
-            }
-            .photo-frame {
-                height: 180px;
-                margin: 10px auto;
-            }
-            .controls-container {
-                bottom: 15px;
-                gap: 20px;
-            }
-            .nav-btn {
-                padding: 10px 30px;
-                font-size: 0.85rem;
-            }
-            .page-num {
-                top: 15px; right: 15px; font-size: 0.8rem;
-            }
+            .book-container { width: 90vw !important; height: 80vh !important; margin-top: -30px; }
+            .page-content { padding: 35px 30px; }
+            .cover { padding: 20px; }
+            .title { font-size: 2rem; }
+            p { font-size: 0.9rem; text-align: left; }
+            .photo-frame { height: 180px; margin: 10px auto; }
+            .controls-container { bottom: 15px; gap: 15px; }
+            .nav-btn { width: 45px; height: 45px; font-size: 1.2rem; }
+            .page-num { top: 15px; right: 15px; font-size: 0.8rem; }
         }
     </style>
 </head>
@@ -256,20 +141,13 @@
         
         <!-- PÁGINA 0: PORTADA -->
         <div class="page cover" data-density="hard">
-            <div>
-                <div class="title">DIARIOS DE<br>SUIZA<br>1972-1974</div>
-                <div class="subtitle">Cartas de un argentino a sus padres</div>
-            </div>
+            <div><div class="title">DIARIOS DE<br>SUIZA<br>1972-1974</div><div class="subtitle">Cartas de un argentino a sus padres</div></div>
             <div class="cover-img"><img src="LibroEuropa/portada.png" alt="FOTO PORTADA"></div>
             <div style="text-align:center; font-family:'Cinzel'; font-size:1.5rem; font-weight:bold;">GUILLERMO BONA</div>
         </div>
 
         <!-- Pág 1: Blanco -->
-        <div class="page" data-density="soft">
-             <div class="page-content" style="justify-content: center; align-items: center;">
-                <p style="font-style: italic; color: #aaa;">Página en blanco</p>
-            </div>
-        </div>
+        <div class="page" data-density="soft"><div class="page-content" style="justify-content: center; align-items: center;"><p style="font-style: italic; color: #aaa;">Página en blanco</p></div></div>
 
         <!-- PÁGINA 2: ÍNDICE -->
         <div class="page" data-density="soft">
@@ -294,15 +172,8 @@
             </div>
         </div>
 
-        <!-- PÁGINA 3: BUSCADOR -->
-        <div class="page" data-density="soft">
-            <div class="page-content">
-                <div class="header">BUSCADOR</div>
-                <p>Escriba una palabra clave para buscar en el diario.</p>
-                <input type="text" id="sInput" class="search-box" placeholder="Buscar..." onkeyup="search()" onmousedown="stop(event)" ontouchstart="stop(event)">
-                <ul id="sList" class="search-list" onmousedown="stop(event)" ontouchstart="stop(event)"></ul>
-            </div>
-        </div>
+        <!-- PÁGINA 3: BLANCO (O BUSCADOR SI PREFIERES, DEJO BLANCO POR LIMPIEZA) -->
+        <div class="page" data-density="soft"><div class="page-content" style="justify-content: center; align-items: center;"><p style="font-style: italic; color: #aaa;">Página en blanco</p></div></div>
 
         <!-- CARTA 1 (Págs 4) -->
         <div class="page" data-density="soft"><div class="page-num">4</div><div class="page-content">
@@ -310,11 +181,11 @@
             <p><strong>Postal 1: Swissair (Avión)</strong></p>
             <p>Dear family: ¡Esto es la mejor experiencia de mi vida! En Montevideo llovía pero qué aterrizo bien. En este momento terminamos de comer y estoy viendo la costa brasilera. Dentro de 15 minutos vamos en Campinas. Me parece que estoy viendo la desembocadura del Amazonas**. Todo muy bien.</p>
             <div class="handwritten">Guillermo</div>
-            <div class="photo-frame" style="height:180px;"><img src="LibroEuropa/foto10.png" alt="FOTO SUGERIDA: AVION SWISSAIR"></div>
+            <div class="photo-frame" style="height:180px;"><img src="LibroEuropa/foto10.png" alt="AVION SWISSAIR"></div>
             <div class="caption">Interior avión Swissair 1970s</div>
              <div class="notes-section">
                 <div class="notes-title">NOTAS SOBRE EL TEXTO</div>
-                <p class="note-item"><span class="note-ref">Amazonas/Campinas:</span> El autor menciona Campinas (cerca de San Pablo) y el Amazonas en la misma frase. Geográficamente están muy lejos, por lo que es probable que confundiera la geografía desde el aire o la ubicación exacta del avión en ese momento.</p>
+                <p class="note-item"><span class="note-ref">Amazonas/Campinas:</span> El autor menciona Campinas (cerca de San Pablo) y el Amazonas en la misma frase. Geográficamente están muy lejos.</p>
             </div>
         </div></div>
 
@@ -323,7 +194,7 @@
             <div class="header">11 de Febrero de 1972 - Primeras Impresiones Nórdicas</div>
             <p>11/2/72<br>Queridos mami, papi y Nelito:</p>
             <p>El vuelo fue muy bueno, la única es que dan demasiado para comer. Europa está todo nublado, desde Lisboa hasta acá. En Zurich cuando el avión pasó las nubes para aterrizar pude ver un poco de Suiza (no hay nieve en los campos; en la montaña sí) el aeropuerto es increíble! En Copenhagen había muchísima niebla y aterrizamos con radar, desde la pista ni se veía el aeropuerto. Acá en Suecia nevó ayer y está todo blanco. El viaje de Arlanda hasta Estocolmo es lindísimo lo único que no tenía nieve era la ruta. Cuando llegué a Arlanda en un estante que dice "Information" había una nota de la amiga de Nick con la dirección del hotel. Me tomé el ómnibus y después un taxi que me costó 1600$ (un afano!). Acá en el hotel me dejó una carta diciendo que la llame por teléfono.</p>
-            <div class="photo-frame"><img src="LibroEuropa/foto1.png" alt="FOTO ESTOCOLMO"></div>
+            <div class="photo-frame"><img src="LibroEuropa/foto1.png" alt="ESTOCOLMO"></div>
             <div class="caption">Centro de Estocolmo</div>
         </div></div>
 
@@ -339,17 +210,14 @@
             <div class="handwritten">Guillermo</div>
         </div></div>
 
-        <div class="page" data-density="soft"><div class="page-num">8</div><div class="page-content">
-            <div class="header">Página en Blanco</div>
-            <p style="text-align:center; font-style:italic; color:#888; margin-top:50%;">Espacio reservado para anotaciones.</p>
-        </div></div> 
+        <div class="page" data-density="soft"><div class="page-num">8</div><div class="page-content"><div class="header">Página en Blanco</div><p style="text-align:center; font-style:italic; color:#888; margin-top:50%;">Espacio reservado para anotaciones.</p></div></div>
 
         <!-- CARTA 3 (Páginas 9-12) -->
         <div class="page" data-density="soft"><div class="page-num">9</div><div class="page-content">
             <div class="header">15 de Febrero de 1972 - Descubriendo Gotemburgo</div>
             <p>Martes 15/2/72<br>Bueno, ya estoy en Gotemburgo.</p>
             <p>El sábado fui a comer a un restaurant muy bueno con la amiga de Nick y un tipo de 25 años y después fuimos a dar una vuelta por el centro. A las 5 se fueron porque tenían otros compromisos, entonces fui al hotel y dormí un poco porque estaba muy cansado, después fui a comer y miré televisión en el bar los olimpíadas de Sapporo en color; ¡fabuloso! El domingo el tipo este me llevó a ver el WASA y el parque SKANSEN donde comí un smörgåsbord buenísimo. El lunes fui a Arlanda a tomar el avión que tuvo casi tres horas de demora y tuve que cambiar de avión tres veces; uno estaba roto y el otro tenía la goma pinchada.</p>
-            <div class="photo-frame"><img src="LibroEuropa/foto2.png" alt="FOTO GOTEMBURGO"></div>
+            <div class="photo-frame"><img src="LibroEuropa/foto2.png" alt="GOTEMBURGO"></div>
             <div class="caption">Puerto de Gotemburgo</div>
         </div></div>
 
@@ -376,7 +244,7 @@
         <div class="page" data-density="soft"><div class="page-num">13</div><div class="page-content">
             <div class="header">21 de Febrero de 1972 - Despedida de Escandinavia</div>
             <p>Estimada flia: Creo que la última carta que escribí fue la de la visita a la fábrica el martes. Hoy termino una semana agotadora en Gotemburgo. Les escribo un resumen de lo que hice porque es demasiado como para entrar en detalles. El miércoles a la mañana me buscó Johann Cederwall el hijo mayor y me llevó durante todo el día en auto a recorrer la ciudad y alrededores. Mölndal, Frölunda Torg, el otro lado del Gota älv, Gunnebo donde vimos un castillo, y hubo una casa bestial que nos llamó poderosamente la atención y despues nos enteramos que era de SKF. A la noche me fui a dormir porque no daba más.</p>
-            <div class="photo-frame"><img src="LibroEuropa/foto11.png" alt="FOTO SUGERIDA: JESUS CHRIST SUPERSTAR"></div>
+            <div class="photo-frame"><img src="LibroEuropa/foto11.png" alt="JESUS CHRIST SUPERSTAR"></div>
             <div class="caption">Jesus Christ Superstar musical 1972</div>
         </div></div>
 
@@ -392,17 +260,14 @@
             <p style="text-align:center; font-size:0.8rem; color:#666; margin-top:20px;">Lunes 21 - G. Bona - P. IV Göthemburs - Södra Vägen 41 - SWEDEN</p>
         </div></div>
 
-        <div class="page" data-density="soft"><div class="page-num">16</div><div class="page-content">
-             <div class="header">Página en Blanco</div>
-            <p style="text-align:center; font-style:italic; color:#888; margin-top:50%;">Espacio reservado para anotaciones.</p>
-        </div></div> <!-- Relleno -->
+        <div class="page" data-density="soft"><div class="page-num">16</div><div class="page-content"><div class="header">Página en Blanco</div><p style="text-align:center; font-style:italic; color:#888; margin-top:50%;">Espacio reservado para anotaciones.</p></div></div> 
 
         <!-- CARTA 5 (Páginas 17-20) -->
         <div class="page" data-density="soft"><div class="page-num">17</div><div class="page-content">
             <div class="header">22 de Febrero de 1972 - Aterrizaje en Zúrich</div>
             <p>Martes 22/2/72   Carta 4 (creo)<br>Queridos:</p>
             <p>Ayer a las 6.20 llegué a Zürich. Trudy me buscó con un SAAB nuevo que tienen. El departamento es muy lindo. Me dieron una pieza (con una cama que es la delicia) y un baño grande como el de Nelo. Trudy es encantadora, y Jack un hombre de pocas pulgas pero muy buen tipo; me está ayudando muchísimo.</p>
-            <div class="photo-frame"><img src="LibroEuropa/foto12.png" alt="FOTO SUGERIDA: ZURICH"></div>
+            <div class="photo-frame"><img src="LibroEuropa/foto12.png" alt="ZURICH"></div>
             <div class="caption">Zúrich Bahnhofstrasse 1970s</div>
         </div></div>
 
@@ -429,8 +294,8 @@
             <p>Sábado 26/2/72<br>Queridos:</p>
             <p>Esta carta la hago corta porque si no me cierra el correo. Acabo de recibir su carta, tardó 4 dias no más! Creo que de Suecia les mandé dos cartas más aparte de lo que recibieron, asi que ahí van a encontrar detalles de lo que me pareció Suecia.</p>
             <p>Yo el otro día les escribí cuales eran los planes, pero mandé la carta por via aérea comun (no certificado ni expreso) y esta la voy a mandar expreso asi que probablemente la reciban antes que la otra.</p>
-            <div class="photo-frame"><img src="LibroEuropa/foto6.png" alt="FOTO SUGERIDA: MAPA SUIZA"></div>
-            <div class="caption">Mapa de Suiza</div>
+            <div class="photo-frame"><img src="LibroEuropa/foto6.png" alt="LAGO LEMAN"></div>
+            <div class="caption">Lago Leman o Lago de Ginebra</div>
         </div></div>
 
         <div class="page" data-density="soft"><div class="page-num">22</div><div class="page-content">
@@ -451,8 +316,8 @@
             <div class="header">29 de Febrero de 1972 - Instalándose en Winterthur</div>
             <p>Martes 29/2/72<br>Querida familia:</p>
             <p>Esta mañana a las 8.30 tomé el tren a Zurich. Ahí me esperaba Mr. Spichiger. Nos subimos a su Mercedes Benz y me trajo hasta Lenzburg. Pasamos y visitamos un poco de Solothurn, Berna y Neuchatel. Llegamos acá a las 5 P.M. Fuimos a la oficina de SKF y ahí conocí a Mr. Ringger que mañana me viene a buscar para llevarme al Berlitz School.</p>
-            <div class="photo-frame"><img src="LibroEuropa/foto13.png" alt="FOTO SUGERIDA: WINTERTHUR OLD TOWN"></div>
-            <div class="caption">Casco antiguo de Winterthur</div>
+            <div class="photo-frame"><img src="LibroEuropa/foto13.png" alt="CASA TIPICA"></div>
+            <div class="caption">Casa Tipica</div>
         </div></div>
 
         <div class="page" data-density="soft"><div class="page-num">25</div><div class="page-content">
@@ -483,8 +348,8 @@
             <p>Lausanne 5 - 3 - 72<br>Querida familia:</p>
             <p>Yo sigo muy bien y el resfrío ya se pasó. Acá en Lausanne estoy conociendo cada día más gente y todos muy macanudos. Francés entiendo todo cuando es hablado y cuando es escrito un poquito menos, y ya me voy dando maña para hablar. Los cursos en Berlitz son buenos y van bastante rápido.</p>
             <p>Lo único que me tiene aterrado acá es el costo de la vida, esta mañana el colectivo aumentó de 80 cts a 1 franco, suerte que como en los restaurantes universitarios que son baratos y el hospedaje no es tan caro.</p>
-            <div class="photo-frame" style="height:200px;"><img src="LibroEuropa/foto7.png" alt="FOTO SUGERIDA: ESQUI"></div>
-            <div class="caption">Sugerencia: Esquí en Suiza</div>
+            <div class="photo-frame" style="height:200px;"><img src="LibroEuropa/foto7.png" alt="ESQUI"></div>
+            <div class="caption">Esquí en Suiza</div>
         </div></div>
 
         <div class="page" data-density="soft"><div class="page-num">29</div><div class="page-content">
@@ -499,8 +364,6 @@
             <p>Postal 2: Skansen Lejonet (Postal de Suecia, escrita en Suiza)</p>
             <p>Querida familia: ¡Estoy en Suiza! Mando una postal sueca (porque soy original). Esta tarde recibí su segunda carta, me ponen muy contento, aunque la verdad más contento de lo que estoy acá... difícil. Bueno, a lo concreto: El domingo me mudo al departamento donde vive mi amiga inglésa, porque de aca me rajan porque ahora vienen turistas (No se preocupen que yo duermo en una pieza y élla en otra). Me hice amigo de una señora sueca que está en clase de francés conmigo y tiene un amigo que dirige una cadena de hoteles así que seguro que me consigue trabajo para el mes que viene (ella tampoco puede creer que Suecia me guste tanto). El lunes mando carta "común", saludos y afines.</p>
             <div class="handwritten">Guillermo</div>
-            <div class="photo-frame" style="height:180px;"><img src="LibroEuropa/foto14.png" alt="FOTO SUGERIDA: POSTAL SUECA"></div>
-            <div class="caption">Postal sueca</div>
              <div class="notes-section">
                 <div class="notes-title">NOTAS SOBRE EL TEXTO</div>
                 <p class="note-item"><span class="note-ref">"Suecia me guste tanto":</span> Esta parte es clave. A primera vista la caligrafía es confusa (parece decir "sale puto"), pero por el contexto y analizando los trazos comparados con otras letras, claramente dice "guste tanto".</p>
@@ -513,7 +376,7 @@
             <p>Lausanne 15/3/71<br>Mon chere papa:</p>
             <p>Avant tout, je te tiens que écrire que ma Français parlé est mieux que ma Française ecrit. Je peux se comprendre practiquement tout ce que je lis et maintenant j’ai commencé a comprendre quand ils parlent à la TV ou la cinema. Les cours à la Berlitz sont vites et je croix que será une bonne idée finir les cours complets; parce qu’on ait besoin de troix mois pour les finir, et ils sont commencés le 1er Fevrier et ils finiroit au fin du mois d’Avril. Et peut être que je peux travailler et étudier en meme temp. C’est facil d’entrer à travailler comme un garçon d’Hotel ou quelque chose similaire. J’ai connu une madame suéde dans le cours de française et elle m’ai dit qu’elle tient un ami qui est “el capo” d’un chain d’hotels et qui peut “conseguir” quelque travail.</p>
             <div class="photo-frame"><img src="LibroEuropa/foto8.png" alt="AUTO EXPOSICION"></div>
-            <div class="caption">Sugerencia: Auto en Expo Ginebra</div>
+            <div class="caption">Auto en Expo Ginebra</div>
         </div></div>
 
         <div class="page" data-density="soft"><div class="page-num">32</div><div class="page-content">
@@ -535,7 +398,7 @@
         <div class="page" data-density="soft"><div class="page-num">35</div><div class="page-content">
             <p>Acá cuando conseguís departamento o algo tenes que poco menos que hacer un sacrificio a los Dioses, porque es i-m-p-o-s-s-i-b-l-e. Tengo un amigo que estaba conmigo en Près de Vidy y el 21 de este mes se tiene que ir de ahi, hace un mes que está tratando de conseguir algo y no puede. Se anotó en agencias pero si por ejemplo el va a ver un depto. y le gusta pero también va un suizo y le gusta se lo dan al suizo; asi él sea el primero en ver el departamento y se levante a las 5 de la mañana. Yo el mío lo conseguí porque hablé directamente con la dueña que si no ya estaba durmiendo en caños.</p>
             <div class="photo-frame"><img src="LibroEuropa/foto9.png" alt="LAUSANNE"></div>
-            <div class="caption">Sugerencia: Lausanne</div>
+            <div class="caption">Lausanne</div>
         </div></div>
 
         <div class="page" data-density="soft"><div class="page-num">36</div><div class="page-content">
@@ -704,8 +567,8 @@
                 <p>La frase "Argentina 'Terrorist’” al final de la carta es un juego de palabras con "Terrorist" y refleja el clima de violencia política de la época.</p>
                 <p><strong>Servicio Militar Suizo:</strong> Se nota la preocupación por entrar en julio ("el asunto de Julio"). La "Infanterie Mitrailleur" (Infantería de Ametralladoras) a la que fue asignado era una posición físicamente exigente, lo cual coincide con su comentario "voy a tener que laburar como negro".</p>
                 <p><strong>Idioma:</strong> Es interesante cómo intercala francés y español ("Spanglish" o "Fragnol"). Frases como "hier matin j'ai reçu ton lettre" (ayer a la mañana recibí tu carta) muestran su inmersión en el idioma, aunque él mismo admite jocosamente que le sale "para el lado de los tomates".</p>
-                <p><strong>Schübligs:</strong> Mencionado en la carta 2, el Schüblig es una salchicha ahumada tradicional suiza, muy popular en la parte alemana (Zurich/Winterthur). <br><br>
-                <strong>Que vachache:</strong> Al final de la carta 3, escribe “que vachache “. Es una fonetización humorística  típica resignación argentina ante un inconveniente.</p>
+                <p><strong>Schübligs:</strong> Mencionado en la carta 2, el Schüblig es una salchicha ahumada tradicional suiza, muy popular en la parte alemana (Zurich/Winterthur).</p>
+                <p><strong>Que vachache:</strong> Al final de la carta 3, escribe “que vachache “. Es una fonetización humorística  típica resignación argentina ante un inconveniente.</p>
             </div>
         </div></div>
 
@@ -717,35 +580,42 @@
         </div>
     </div>
 
-    <!-- CONTROLES FLOTANTES PARA IPAD (SIEMPRE VISIBLES) -->
+    <!-- CONTROLES FLOTANTES -->
     <div class="controls-container">
-        <button class="nav-btn" id="prev">ANTERIOR</button>
-        <button class="nav-btn" id="next">SIGUIENTE</button>
+        <button class="nav-btn" id="prev" title="Anterior">&#8592;</button>
+        <button class="index-btn" onclick="flip(2)">ÍNDICE</button>
+        <button class="nav-btn" id="next" title="Siguiente">&#8594;</button>
     </div>
 
     <script>
         let pageFlip;
-        // Datos simples para el buscador (actualizados con los nuevos números de página)
+        // Datos simples para el buscador
         const pageTexts = {
             4: "vuelo comida europa nublado zurich avion nieve campos montaña aeropuerto copenhagen niebla suecia arlanda estocolmo",
-            6: "hotel carta telefono centro cama escritorio ropero lavatorio ventana calle 1600 taxi",
-            7: "comer precio hotel barato limpio frio negocios gente loca semaforo pelo largo cena vino lomo heroina",
-            8: "gotemburgo sabado restaurant amiga nick centro compromisos hotel dormir television olimpiadas sapporo wasa skansen",
-            9: "arlanda avion demora goma pinchada torslanda inga anna comida china fabrica skf",
-            10: "borrachos transporte tranvia holmqvist gruffman bo overgaard trabajo fabrica bolillas jaulas montaje",
-            11: "cederwall causé buena impresion nelo hospitalidad",
-            12: "jensen quinoto fe pais parientes plata papi mami johann resumen",
-            13: "molndal frolunda torg gota alv gunnebo castillo charlotte novio",
-            14: "anita jabones puerto lars jesus christ superstar discoteca medicina",
-            15: "estacion gunell aerograma operacion ulcera kungsbacka",
-            17: "zurich trudy saab departamento cama nelo jack registro militar",
-            18: "frances pruebas rechazo",
-            19: "spichiger suiza francesa neuchatel lausanne ginebra crash-course",
-            20: "precios dinero papi experiencia feliz",
-            22: "winterthur tren mercedes benz lenzburg solothurn berna neuchatel oficina ringger berlitz",
-            23: "pension foyer de vidy bungalows madera teja calefaccion",
-            24: "toalla comida barata 13 dias",
-            25: "jack antipatico datos curso francos",
+            5: "information nota amiga nick direccion hotel omnibus taxi 1600 afano",
+            6: "carta telefono centro florida pieza 3m 7m cama escritorio ropero lavatorio ventana calle 4hs 5 y media señora macanuda almorzar 6 noche 3500",
+            7: "fondo 3 dias 10 coronas 8000 barato limpisimo temperatura -2 frio negocios limpios ordenados gente loca semaforo",
+            8: "pelo corto hombros cena vino lomo cafe increible roñosos melenudos asombro 20 minutos heroina inyecciones gritaba corria drogados tak gracias amable",
+            9: "15 de febrero gotemburgo martes 15/2/72 sabado restaurant 25 años vuelta centro compromisos cansado television olimpiadas sapporo wasa skansen smorgasbord",
+            10: "lunes avion demora goma pinchada torslanda inga anna comida china fabrica skf",
+            11: "ciudades buenos aires borrachos techo fin de semana subtes transporte organizado secretaria holmqvist",
+            12: "paquete gruffman bo overgaard contento macanudo trabajo erlenson fabrica bolillas jaulas montaje cederwall",
+            13: "hospitalidad suizo piola tarjeta zurich copenhague jensen quinoto fe pais parientes",
+            14: "plata amarrocar kilos vitaminas",
+            15: "21 de febrero resumen semanal visita fabrica miercoles johann cederwall auto molndal frolunda torg gota alv gunnebo castillo",
+            16: "jueves paseo charlotte novio simpatico viernes teleobjetivo chiches anita jabones",
+            17: "sabado puerto frederikhaven lars scandinavium jesus christ superstar discoteca medicina domingo estacion despedir anna",
+            18: "aerograma lunes 21 gunell ulcera kungsbacka costa",
+            20: "22 de febrero zurich martes 22/2/72 carta 4 6.20 trudy saab departamento cama nelo jack registro militar",
+            21: "pruebas test comprension frances 20 de marzo 15 de abril rechazado servicio febrero 73 julio 73 bs as gobierno pasaje",
+            22: "optimistamente 1 mes spichiger 2hs vuelta opinion suiza francesa neuchatel lausanne ginebra colegio crash-course",
+            23: "precios trabajo post-boy lavaplatos pinche",
+            24: "plata 4000 francos experiencia marca mayor feliz acontecio",
+            25: "in god i trust guillermo bonasson palmstrasse",
+            26: "29 de febrero winterthur martes 29/2/72 tren mercedes benz lenzburg solothurn berna neuchatel oficina ringger berlitz",
+            27: "pension foyer de vidy bungalows madera teja calefaccion toalla comida barata",
+            28: "13 dias jack antipatico",
+            29: "datos curso francos henri hans",
             26: "sabado 26/2/72 carta corta suecia planes pension lausanne auto zurich",
             27: "agradecimiento rompiendo verguenza winterthur examenes colimba libreta militar pfungen suizo-español maria",
             28: "folletos lecciones francos barato trabajar caro",
