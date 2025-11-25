@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Diarios de Suiza 1972-1975</title>
+    <script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.min.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Lora:ital,wght@0,400;0,700;1,400&family=Caveat:wght@700&display=swap');
+
+        /* --- ESTILOS GENERALES --- */
+        * { box-sizing: border-box; }
+
+        body {
+            background-color: #1a1a1a; 
+            margin: 0; 
+            height: 100vh; 
+            width: 100vw;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center;
+            font-family: 'Lora', serif; 
+            overflow: hidden;
+        }
+
+        .book-container {
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            width: 550px; height: 780px;
+            max-width: 95vw; max-height: 95vh;
+        }
+
+        .page {
+            background-color: #fffef0; border: 1px solid #ccc; overflow: hidden; position: relative;
+        }
+
+        .page-content {
+            padding: 55px 45px; height: 100%; display: flex; flex-direction: column; justify-content: flex-start; 
+        }
+
+        /* Tipografía */
+        p { 
+            font-size: 0.92rem; line-height: 1.55; text-align: justify; margin-bottom: 12px; color: #222; word-wrap: break-word; 
+        }
+        
+        .header {
+            font-family: 'Cinzel', serif; font-weight: bold; border-bottom: 2px solid #444;
+            margin-bottom: 20px; text-align: center; font-size: 1.1rem; padding-bottom: 8px; color: #111;
+        }
+        
+        .handwritten {
+            font-family: 'Caveat', cursive; font-size: 1.8rem; color: #003366; text-align: right; margin-top: 15px;
+        }
+        
+        /* Notas - Estilo optimizado */
+        .notes-section {
+            background-color: #f9f9f9; 
+            border-left: 4px solid #ccc; 
+            padding: 15px; 
+            margin-top: 10px; 
+            font-size: 0.85rem; 
+            line-height: 1.5;  
+            color: #444;
+            height: auto;
+        }
+        .notes-title { font-weight: bold; margin-bottom: 10px; font-family: 'Cinzel', serif; font-size: 0.95rem; border-bottom: 1px solid #ddd; padding-bottom: 5px;}
+        .note-item { margin-bottom: 8px; }
+        .note-ref { font-weight: bold; color: #2c3e50; }
+
+        /* Fotos */
+        .photo-frame {
+            width: 100%; height: 220px; background: #f4f4f4; border: 6px solid #fff;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.15); margin: 15px auto;
+            display: flex; align-items: center; justify-content: center; overflow: hidden; transform: rotate(-0.5deg);
+        }
+        .photo-frame img { width: 100%; height: 100%; object-fit: cover; filter: sepia(15%) contrast(110%); }
+        .caption { font-size: 0.8rem; text-align: center; color: #666; font-style: italic; margin-top: 5px; }
+
+        /* Portada */
+        .cover {
+            background-color: #2c3e50; color: #fff; padding: 40px;
+            display: flex; flex-direction: column; justify-content: space-between; border-right: 8px solid #1a252f;
+        }
+        .title { font-family: 'Cinzel', serif; font-size: 3rem; line-height: 1.1; text-align: center; font-weight: 700; margin-top: 20px; letter-spacing: 2px; }
+        .subtitle { font-family: 'Lora', serif; font-size: 1.1rem; text-align: center; font-style: italic; margin-bottom: 20px; opacity: 0.9; }
+        .cover-img {
+            flex-grow: 1; margin: 30px 0; border: 4px solid #fff; background: #000;
+            overflow: hidden; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+        .cover-img img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%) sepia(40%) hue-rotate(180deg) saturate(150%) contrast(120%); }
+
+        /* Navegación Minimalista */
+        .controls-container {
+            position: fixed; bottom: 25px; left: 0; width: 100%;
+            display: flex; justify-content: center; gap: 20px; z-index: 10000; pointer-events: none;
+        }
+        
+        /* Botones Flechas */
+        .nav-btn {
+            pointer-events: auto; background: #f5c518; border: 2px solid #fff;
+            width: 50px; height: 50px; border-radius: 50%;
+            font-size: 1.5rem; font-weight: bold; color: #000;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.6); transition: transform 0.1s;
+        }
+        
+        /* Botón Índice */
+        .index-btn {
+            pointer-events: auto; background: #2c3e50; color: #fff; border: 2px solid #f5c518;
+            padding: 0 20px; height: 50px; border-radius: 25px;
+            font-family: 'Cinzel', serif; font-weight: bold; font-size: 0.9rem;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.6); transition: transform 0.1s;
+        }
+
+        .nav-btn:active, .index-btn:active { transform: scale(0.95); }
+
+        .page-num { position: absolute; top: 25px; right: 25px; font-family: 'Cinzel', serif; font-weight: bold; color: #999; font-size: 0.9rem; }
+
+        /* Índice */
+        .index-list { list-style: none; padding: 0; }
+        .index-list li {
+            padding: 10px 0; border-bottom: 1px dashed #ccc; cursor: pointer;
+            font-weight: bold; font-family: 'Cinzel', serif; font-size: 0.85rem;
+        }
+        .index-list li:hover { color: #d35400; }
+        .index-num { float: right; color: #777; }
+
+        /* iPhone Fix */
+        @media only screen and (max-width: 600px) {
+            .book-container { width: 90vw !important; height: 80vh !important; margin-top: -30px; }
+            .page-content { padding: 35px 30px; }
+            .cover { padding: 20px; }
+            .title { font-size: 2rem; }
+            p { font-size: 0.9rem; text-align: left; }
+            .photo-frame { height: 180px; margin: 10px auto; }
+            .controls-container { bottom: 15px; gap: 15px; }
+            .nav-btn { width: 45px; height: 45px; font-size: 1.2rem; }
+            .page-num { top: 15px; right: 15px; font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="book" class="book-container">
+        
+        <div class="page cover" data-density="hard">
+            <div><div class="title">DIARIOS DE<br>SUIZA<br>1972-1974</div><div class="subtitle">Cartas de un argentino a sus padres</div></div>
+            <div class="cover-img"><img src="LibroEuropa/portada.png" alt="FOTO PORTADA"></div>
+            <div style="text-align:center; font-family:'Cinzel'; font-size:1.5rem; font-weight:bold;">GUILLERMO BONA</div>
+        </div>
+
+        <div class="page" data-density="soft"><div class="page-content" style="justify-content: center; align-items: center;"><p style="font-style: italic; color: #aaa;">Página en blanco</p></div></div>
+
+        <div class="page" data-density="soft">
+            <div class="page-content">
+                <div class="header">ÍNDICE</div>
+                <ul class="index-list">
+                    <li onclick="flip(4)">I. El Cruce del Atlántico (11/02/72) <span class="index-num">4</span></li>
+                    <li onclick="flip(5)">II. Primeras Impresiones Nórdicas (11/02/72) <span class="index-num">5</span></li>
+                    <li onclick="flip(9)">III. Descubriendo Gotemburgo (15/02/72) <span class="index-num">9</span></li>
+                    <li onclick="flip(13)">IV. Despedida de Escandinavia (21/02/72) <span class="index-num">13</span></li>
+                    <li onclick="flip(17)">V. Aterrizaje en Zúrich (22/02/72) <span class="index-num">17</span></li>
+                    <li onclick="flip(21)">VI. Planes y Mudanzas (26/02/72) <span class="index-num">21</span></li>
+                    <li onclick="flip(24)">VII. Instalándose en Winterthur (29/02/72) <span class="index-num">24</span></li>
+                    <li onclick="flip(28)">VIII. Esquí y Amigos (05/03/72) <span class="index-num">28</span></li>
+                    <li onclick="flip(30)">IX. Postal desde Suiza (08/03/72) <span class="index-num">30</span></li>
+                    <li onclick="flip(31)">X. La Vida en Lausana (15/03/72) <span class="index-num">31</span></li>
+                    <li onclick="flip(39)">XI. Inquietudes y Futuro (27/03/72) <span class="index-num">39</span></li>
+                    <li onclick="flip(44)">XII. La Decisión de Estudiar (01/04/72) <span class="index-num">44</span></li>
+                    <li onclick="flip(50)">XIII. El Examen Militar (04/04/72) <span class="index-num">50</span></li>
+                    <li onclick="flip(54)">XIV. Mudanza y Contexto Político (13/04/72) <span class="index-num">54</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="page" data-density="soft"><div class="page-content" style="justify-content: center; align-items: center;"><p style="font-style: italic; color: #aaa;">Página en blanco</p></div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">4</div><div class="page-content">
+            <div class="header">11 de Febrero de 1972 - El Cruce del Atlántico</div>
+            <p><strong>Postal 1: Swissair (Avión)</strong></p>
+            <p>Dear family: ¡Esto es la mejor experiencia de mi vida! En Montevideo llovía pero qué aterrizo bien. En este momento terminamos de comer y estoy viendo la costa brasilera. Dentro de 15 minutos vamos en Campinas. Me parece que estoy viendo la desembocadura del Amazonas**. Todo muy bien.</p>
+            <div class="handwritten">Guillermo</div>
+            <div class="photo-frame" style="height:180px;"><img src="LibroEuropa/foto10.png" alt="AVION SWISSAIR"></div>
+             <div class="notes-section">
+                <div class="notes-title">NOTAS SOBRE EL TEXTO</div>
+                <p class="note-item"><span class="note-ref">Amazonas/Campinas:</span> El autor menciona Campinas (cerca de San Pablo) y el Amazonas en la misma frase. Geográficamente están muy lejos.</p>
+            </div>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">5</div><div class="page-content">
+            <div class="header">11 de Febrero de 1972 - Primeras Impresiones Nórdicas</div>
+            <p>11/2/72<br>Queridos mami, papi y Nelito:</p>
+            <p>El vuelo fue muy bueno, la única es que dan demasiado para comer. Europa está todo nublado, desde Lisboa hasta acá. En Zurich cuando el avión pasó las nubes para aterrizar pude ver un poco de Suiza (no hay nieve en los campos; en la montaña sí) el aeropuerto es increíble! En Copenhagen había muchísima niebla y aterrizamos con radar, desde la pista ni se veía el aeropuerto. Acá en Suecia nevó ayer y está todo blanco. El viaje de Arlanda hasta Estocolmo es lindísimo lo único que no tenía nieve era la ruta. Cuando llegué a Arlanda en un estante que dice "Information" había una nota de la amiga de Nick con la dirección del hotel. Me tomé el ómnibus y después un taxi que me costó 1600$ (un afano!). Acá en el hotel me dejó una carta diciendo que la llame por teléfono.</p>
+            <div class="photo-frame"><img src="LibroEuropa/foto1.png" alt="ESTOCOLMO"></div>
+            <div class="caption">Centro de Estocolmo</div>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">6</div><div class="page-content">
+            <p>Estoy en pleno centro (más o menos la calle Florida de Estocolmo). es una pieza de 3m x 7m 1 cama 1 escritorio 1 ropero 1 lavatorio, tiene una ventana que da a la calle. Llegué a las 4hs me lavé y esperé hasta las cinco y media para llamar a la amiga de Nick. La llamé y es una señora macanuda y me invitó a almorzar mañana con ella.</p>
+            <p>A las seis (plena noche) bajé a comer comí bien pero me costó 3.500$ (otro afano) Mañana voy a ver si compro algo para comer acá porque si no me fondo en tres días. El hotel creo que cuesta 10 coronas (8000$) es barato (en comparación) y es limpísimo. Después de comer salí a dar una vuelta, la temperatura es de -2 C° pero yo no siento mucho frío. Los negocios son lindísimos, muy limpios y bien ordenados.</p>
+            <p>Acá la gente está toda loca ¡cruzan por la esquina y con el semáforo! Lo que sí es que si encuentro un tipo que tenga el pelo más corto que la altura de los hombros le pago una cena con vino, lomo y café porque estoy seguro que no hay uno solo.</p>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">7</div><div class="page-content">
+            <p>Es increíble pero hay una cantidad de roñosos y melenudos que no salgo del asombro, y eso que estuve paseando 20 minutos nada más. Recién cuando caminaba pasó un tipo por la vereda de enfrente que tenía por lo menos 4 inyecciones de heroína, gritaba, corría, se paraba, puteaba a la gente en sueco; y tenía como máximo 20 años. Después por todos lados hay tipos con cara de drogados, probablemente porque es de noche, pero sin embargo hay muchísima gente en la calle.</p>
+            <p>Antes que salude otra cosa, te dicen gracias (Tak) por cualquier cosa, si a un tipo lo pateás te dice Tak, son muy amables.</p>
+            <div class="handwritten">Guillermo</div>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">8</div><div class="page-content"><div class="header">Página en Blanco</div><p style="text-align:center; font-style:italic; color:#888; margin-top:50%;">Espacio reservado para anotaciones.</p></div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">9</div><div class="page-content">
+            <div class="header">15 de Febrero de 1972 - Descubriendo Gotemburgo</div>
+            <p>Martes 15/2/72<br>Bueno, ya estoy en Gotemburgo.</p>
+            <p>El sábado fui a comer a un restaurant muy bueno con la amiga de Nick y un tipo de 25 años y después fuimos a dar una vuelta por el centro. A las 5 se fueron porque tenían otros compromisos, entonces fui al hotel y dormí un poco porque estaba muy cansado, después fui a comer y miré televisión en el bar los olimpíadas de Sapporo en color; ¡fabuloso! El domingo el tipo este me llevó a ver el WASA y el parque SKANSEN donde comí un smörgåsbord buenísimo. El lunes fui a Arlanda a tomar el avión que tuvo casi tres horas de demora y tuve que cambiar de avión tres veces; uno estaba roto y el otro tenía la goma pinchada.</p>
+            <div class="photo-frame"><img src="LibroEuropa/foto2.png" alt="GOTEMBURGO"></div>
+            <div class="caption">HQ de SKF Gotemburgo</div>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">10</div><div class="page-content">
+            <p>Llegué a Torslanda a eso de la una y tomé el colectivo hasta el Park Avenue Hotel donde me encontré con Inga. A la noche fui con Anna y una amiga a un restaurante chino, después volvimos a casa y cayeron dos suecos y estuvimos charlando un rato.</p>
+            <p>Realmente estoy maravillado con las ciudades y la gente, no siento ninguna diferencia notable con Buenos Aires y me gusta estar más acá que allá. Lo único criticable son los borrachos en Estocolmo que hay para tirar al techo. Me dicen que probablemente vi muchos porque era un fin de semana y estaba enfrente de la terminal de subtes que es donde se encuentran generalmente.</p>
+            <p>El transporte es increíble, todo muy bien organizado. Esta mañana me fui solo a SKF en tranvía y llegué lo más bien. Ahí pregunté por la secretaria Holmqvist y en seguida me atendieron lo más bien.</p>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">11</div><div class="page-content">
+            <p>A ella le di el paquete para Gruffman y lo fui a ver a Bo Overgaard que estaba muy contento y es macanudo. Cuando le dije lo de Suiza en seguida me dijo que vaya a pedir trabajo a SKF. Después fui con un señor que te conoce y creo que se llama Erlenson o algo así, que me llevó a ver algo de lo increíblemente grande que es la fábrica (bolillas, jaulas y montaje). La fábrica me asombró. Me olvidé de verlo a Cederwall pero uno de estos días voy a llamarlos a ver si puedo ir a la casa. Creo que el domingo o el lunes me voy porque Anna también se va y además las ciudades parecen sacadas de los libros de historia, con casas viejas y muy lindas.</p>
+            <p>No quiero abusar de la hospitalidad. Creo que en Suiza no voy a tener ningún problema con el trabajo. No creo que les dije que en el avión al lado mío se sentó un suizo piola que me dijo una que no hay problema e incluso me dio su tarjeta de Zurich para que lo llame. Creo que no voy a ir a Copenhague porque Jensen vive por la loma del quinoto.</p>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">12</div><div class="page-content">
+            <p>Todavía no entiendo como, después de haber visto todo esto (y eso que vi poco), están viviendo en Buenos Aires. Tengo fe en el país, pero… no tanto.</p>
+            <p>Mis cartas háganlas circular por la flia, porque les voy a escribir postales a los demás parientes, o quizás una carta de vez en cuando.</p>
+            <p>Papi no te preocupes que la plata alcanza, hay que amarrocar un poco, pero… soy buen suizo en ese sentido. En Estocolmo bajé tres kilos pero pienso recuperarlos y con creces (peso 65 ahora !). Mami no te preocupes que tu Guillermito se cuida, me abrigo bien (aunque no hace frío +2 C° en Gotemburgo, no nieve) y tomo vitaminas todos los días.</p>
+            <p>Cariños a todo aquel que por mi pregunte por mi. Guillermo.</p>
+            <p>PD: Causé muy buena impresión en SKF y estoy seguro que los dejé bien. Nelo estudiá! a ver si cuando termina el año podés venir. ¿Me extrañás hermanito?</p>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">13</div><div class="page-content">
+            <div class="header">21 de Febrero de 1972 - Despedida de Escandinavia</div>
+            <p>Estimada flia: Creo que la última carta que escribí fue la de la visita a la fábrica el martes. Hoy termino una semana agotadora en Gotemburgo. Les escribo un resumen de lo que hice porque es demasiado como para entrar en detalles. El miércoles a la mañana me buscó Johann Cederwall el hijo mayor y me llevó durante todo el día en auto a recorrer la ciudad y alrededores. Mölndal, Frölunda Torg, el otro lado del Gota älv, Gunnebo donde vimos un castillo, y hubo una casa bestial que nos llamó poderosamente la atención y despues nos enteramos que era de SKF. A la noche me fui a dormir porque no daba más.</p>
+            <div class="photo-frame"><img src="LibroEuropa/foto11.png" alt="JESUS CHRIST SUPERSTAR"></div>
+            <div class="caption">Jesus Christ Superstar musical 1972</div>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">14</div><div class="page-content">
+            <p>El jueves dormí hasta tarde, después paseé por la ciudad a pie y a la noche fuimos a comer a la casa de Charlotte que vive con el novio y es un tipo muy simpático y con mucho sentido del humor, nos divertimos muchísimo. El viernes fui a comprar algunas cosas (un teleobjetivo y otras chiches para la máquina). A la tarde fuimos a comer a la casa de Anita que estuvo muy contenta con los jabones pero Suecia no le gusta mucho. Estoy comiendo pescado como loco. el sábado al mediodía fuimos a un restaurante en el puerto (creo que se llama Frederikhavn o algo) con Charlotte y el novio (Lars). A la tarde fui al Scandinavium a ver Jesus Christ Superstar con Bo, Johann y la novia, la entrada me la regaló Anita porque dijo que a ella no le gusta. A la noche fui con Lars y Charlotte a una discoteca para estudiantes de medicina y realmente la pasé muy bien (ya estoy seguro que cuando me case me caso con una sueca).</p>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">15</div><div class="page-content">
+            <p>El domingo fui con Johann y la novia a recorrer la ciudad, almorcé en la casa de Anita y despues fuimos a la estación a despedir a Anna que volvía a Sigtuna. En la estación había arreglado encontrarme con Gunell y Mr. Gustafson, así que después de la partida fui a tomar un café con ellos Gunell estaba contentísima. Pronto se tiene que operar, creo que de una úlcera. Después seguí con Johann y la novia hasta KUNGSBACKA y volvimos por la costa.</p>
+            <p>A la noche fuimos de nuevo a la casa de Anita a cenar Anita, Gunell (escribile !!!) e Inga te mandan saludos, gracias, augurios de prosperidad y demás afines.</p>
+            <p>Junto con esta mando otra carta con mis detalles espero que lleguen juntas.</p>
+            <div class="handwritten">Saludos Guillermo</div>
+            <p style="text-align:center; font-size:0.8rem; color:#666; margin-top:20px;">Lunes 21 - G. Bona - P. IV Göthemburs - Södra Vägen 41 - SWEDEN</p>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">16</div><div class="page-content"><div class="header">Página en Blanco</div><p style="text-align:center; font-style:italic; color:#888; margin-top:50%;">Espacio reservado para anotaciones.</p></div></div> 
+
+        <div class="page" data-density="soft"><div class="page-num">17</div><div class="page-content">
+            <div class="header">22 de Febrero de 1972 - Aterrizaje en Zúrich</div>
+            <p>Martes 22/2/72   Carta 4 (creo)<br>Queridos:</p>
+            <p>Ayer a las 6.20 llegué a Zürich. Trudy me buscó con un SAAB nuevo que tienen. El departamento es muy lindo. Me dieron una pieza (con una cama que es la delicia) y un baño grande como el de Nelo. Trudy es encantadora, y Jack un hombre de pocas pulgas pero muy buen tipo; me está ayudando muchísimo.</p>
+            <div class="photo-frame"><img src="LibroEuropa/foto12.png" alt="ZURICH"></div>
+            <div class="caption">Zúrich Bahnhofstrasse 1970s</div>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">18</div><div class="page-content">
+            <p>Este mañana fui con él al registro militar. Todo puede andar bien con un solo detalle; entre las pruebas de admisión hay una especie de test de comprensión en Francés, así que me dijeron que tengo que sí o - sí poder entender y hablar Francés. Las pruebas (físicas, médicas, etc) se realizan del 20 de Marzo al 15 de Abril, así que para ese tiempo tengo que aprender Francés. Cabe la posibilidad de que en caso de ser rechazado, me propongan el servicio hasta Febrero 73 o probablemente hasta Julio 73'. En este caso si me vuelvo a Bs As el gobierno me paga el viaje de regreso a Suiza.</p>
+            <p>Ahora bien; pensando optimistamente creo que puedo aprender suficiente Francés en 1 mes (o un poco más) como para pasarlo. Después de todo cuando me tomen la prueba yo les puedo explicar mi posición y decirles que antes de ingresar en el servicio voy a estar tres meses en la Suiza francesa con lo que creo voy a poder hablar suficiente Francés.</p>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">19</div><div class="page-content">
+            <p>Pensando así lo llamé a Spichiger. A las 2hs me buscó en la estación de Zurich y me llevó a dar una vuelta y a tomar algo, Mientras hablamos del asunto. Después de intercambiar opiniones decidí esto: ir a la Suiza francesa (Neuchatel o Lausanne o Ginebra, etc) e instalarme ahí; asistir a algún colegio para aprender Francés o alguna especie de crash-course. En dos días él me va a averiguar precios y lugares y despos tendré que decidir por cual yo ya le expliqué que no quería gastar mucho. En cuanto al trabajo creo que hasta después de las pruebas no puedo decidir nada, y creo que es mejor estudiar intensivamente que trabajar y estudiar. Aparte, según Spichiger, en la S. Francesa hay muchos jóvenes en mi condición que vienen de la S. Alem. y quieren conseguir un trabajo para aprender mejor el francés, y por esto se hace un poco difícil. Aunque conseguir trabajo de post-boy o lavaplatos o pinche es fácil. Pero igual esto lo voy a decidir después de ver si me admiten o no.</p>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">20</div><div class="page-content">
+            <p>Creo que la plata me puede alcanzar para 4 ó 5 meses olgadamente. Por ahora no toqué un solo franco de los 4000. Y cuando empiece a gastar en serio no (casa, colegio, etc) te voy a decir si necesito o no que me mandes.</p>
+            <p>Papi, yo creo que si no hubiera podido venir gratis, vos habrías hecho muy mal en no mandarme. Es algo que nunca te hubieras perdonado porque esto es increíble, una experiencia de marca mayor. Desde que nací es la cosa más feliz que me aconteció (¿que me contás?). Más adelante les escribo una carta (el viernes probablemente) de mis impresiones sobre Suiza, porque esto me parece más impactante (el servicio, etc, todo eso) como para dejarlo de lado.</p>
+            <p>Spichiger macanudísimo y muy agradecido y muy contento de verme.</p>
+            <div class="handwritten">In God I Trust. Guillermo Bonasson</div>
+            <p style="font-size:0.8rem; text-align:center; margin-top:10px;">G. Bona - Palmstrasse 26 - CH 8400 Winterthur - SWITZERLAND</p>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">21</div><div class="page-content">
+            <div class="header">26 de Febrero de 1972 - Planes y Mudanzas</div>
+            <p>Sábado 26/2/72<br>Queridos:</p>
+            <p>Esta carta la hago corta porque si no me cierra el correo. Acabo de recibir su carta, tardó 4 dias no más! Creo que de Suecia les mandé dos cartas más aparte de lo que recibieron, asi que ahí van a encontrar detalles de lo que me pareció Suecia.</p>
+            <p>Yo el otro día les escribí cuales eran los planes, pero mandé la carta por via aérea comun (no certificado ni expreso) y esta la voy a mandar expreso asi que probablemente la reciban antes que la otra.</p>
+            <div class="photo-frame"><img src="LibroEuropa/foto6.png" alt="LAGO LEMAN"></div>
+            <div class="caption">Lago Leman o Lago de Ginebra</div>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">22</div><div class="page-content">
+            <p>Spichiger me consiguió una pensión en Lausanne, y voy a ir al Berlitz School ahí; también me va a llevar a Lausanne en auto. El martes a las 7:15 AM tomo el tren a Zurich donde me espera para llevarme.</p>
+            <p>Papi, mandale una carta de agradecimiento porque realmente se está rompiendo todo, hasta me da vergüenza todo lo que hace por mi. En Lausanne si todo va bien me quedo hasta el 2 o 3 de Abril, después me vengo a Winterthur para dar los examenes colimbicos (de la colimba).</p>
+            <p>Yo tengo la libreta militar. Tambien estoy haciendo tramites para sacar un certificado de origen (de Pfungen), creo que en 10 dias me lo dan.</p>
+            <p>Ayer estuve con un tipo de 20 años Suizo-Español que ya hizo el servicio y me dijo que entro seguro, mientras ande bien de salud y pueda hacer las pruebas.</p>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">23</div><div class="page-content">
+            <p>A Maria no la pude llamar porque no conseguí el numero. Porque en la guia de Gotemburgo no esta Fui .al correo y me fije en las otras pero no lo pude encontrar</p>
+            <p>Recien me llegaron unos folletos que me mandó Spichiger el Berlitz con 20 lecciones... de lunes a viernes sale 315 francos por mes y despues me mando una lista de pensiones pero creo que no esta a la que yo voy a ir y todas estan de 600 a 700 francos, espero que me haya conseguido algo mas barato. Despues de que haya dado el examen me pondre a trabajar porque esto sale muy caro</p>
+            <div class="handwritten">Saludos Guillermo</div>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">24</div><div class="page-content">
+            <div class="header">29 de Febrero de 1972 - Instalándose en Winterthur</div>
+            <p>Martes 29/2/72<br>Querida familia:</p>
+            <p>Esta mañana a las 8.30 tomé el tren a Zurich. Ahí me esperaba Mr. Spichiger. Nos subimos a su Mercedes Benz y me trajo hasta Lenzburg. Pasamos y visitamos un poco de Solothurn, Berna y Neuchatel. Llegamos acá a las 5 P.M. Fuimos a la oficina de SKF y ahí conocí a Mr. Ringger que mañana me viene a buscar para llevarme al Berlitz School.</p>
+            <div class="photo-frame"><img src="LibroEuropa/foto13.png" alt="CASA TIPICA"></div>
+            <div class="caption">Casa Tipica</div>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">25</div><div class="page-content">
+            <p>Uds se preguntarán ¿dónde estoy? Bueno, estoy en la Pensión "Foyer de Vidy" que está entre el cementerio y el lago. Son 5 bungalows largos con 90 piezas en c/u (dibujo). Fueron construidos para una exposición que hubo una vez y después los compró el estado. Son de madera y teja. La pieza mide unos 3.5m x 5m, tiene 1 cama (muy buena) 2 roperos 1 mesa y 2 sillas. En el bungalow hay inodoros, mingitorios, duchas y lavatorios. Todo es muy limpio y cómodo. Ah! También hay calefacción.</p>
+            <p>Lo único, es que no tengo toalla así que mañana voy a comprarme un toallón barato para bañarme. Es sin comida, pero acá hay un bungalow donde sirven desayuno y creo que cena. Las otras comidas las comeré por ahí. La pieza es barata, 9 francos por noche (es lo más barato de Lenzburg).</p>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">26</div><div class="page-content">
+            <p>La macana de esto es que en 13 días me tengo que ir porque ya está reservado, así que voy a ver si lo convenzo al dueño o me busco otra cosa. Yo ya no me acuerdo ni lo que les escribo porque estoy escribiendo a mucha gente, así que Uds pregunten nomás si ven que falta algo. Por ahora sigan mandando las cartas a la casa de Trudy que ella me las va a mandar a donde esté.</p>
+            <p>Spichiger es macanudísimo, se rompió todo por mi. Sinceramente a veces me daba verguenza. Otro que me ayudó muchísimo fue Jack ¿quien dijo que era antipático? yo hablé mucho con él y nos divertimos mucho.</p>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">27</div><div class="page-content">
+            <p><strong>Interesting data:</strong><br>
+            + El 2 o 3 de Abril vuelvo a Winterthur.<br>
+            + El curso en Berlitz cuesta 315 francos.<br>
+            + 2000 francos se los dejé a Trudy y 2000 me traje.<br>
+            + En total me quedan 4.200 francos (y ya pagué 7 días de alojamiento).</p>
+            <p>Voy a ver si en la próxima carta puedo escribirles de la visita que hice a la casa de Henri, o ya te los conté ? ¡que se yo! H. Spichiger manda muchos saludos (quiere que lo llame Hans).</p>
+            <div class="handwritten">Saludos a todos<br>Guillermo</div>
+            <br>
+            <p style="font-size:0.8rem; text-align:center;">G. Bona - Palmstrasse 26 / J. Andereg - CH 8400 Winterthur - SWITZERLAND</p>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">28</div><div class="page-content">
+            <div class="header">5 de Marzo de 1972 - Esquí y Amigos</div>
+            <p>Lausanne 5 - 3 - 72<br>Querida familia:</p>
+            <p>Yo sigo muy bien y el resfrío ya se pasó. Acá en Lausanne estoy conociendo cada día más gente y todos muy macanudos. Francés entiendo todo cuando es hablado y cuando es escrito un poquito menos, y ya me voy dando maña para hablar. Los cursos en Berlitz son buenos y van bastante rápido.</p>
+            <p>Lo único que me tiene aterrado acá es el costo de la vida, esta mañana el colectivo aumentó de 80 cts a 1 franco, suerte que como en los restaurantes universitarios que son baratos y el hospedaje no es tan caro.</p>
+            <div class="photo-frame" style="height:200px;"><img src="LibroEuropa/foto7.png" alt="ESQUI"></div>
+            <div class="caption">Esquí en Suiza</div>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">29</div><div class="page-content">
+            <p>Ayer fue el día más feliz de mi vida. Fui a esquiar. Fuimos con un grupo bastante grande en auto hasta un lugar que esta a 100 km de aca y se llama Le Chemossaire. Cuando llegamos estaba nevando un poco. Alquilé unos esquies me abrigué bien y nos fuimos a la pista. Ahí me enseñaron como doblar y parar y en tres cuartos de hora ya me podía tirar de la pista chica sin caerme y doblando. Todos estaban asombrados. Paramos de esquiar para comer y yo a la tarde ya quería tirarme de la pista mediana pero empezó a nevar de tal manera que era imposible. Entonces nos fuimos a dar una vuelta por Gstaad y otros pueblitos. Todos increíblemente lindos.</p>
+            <p>Recién recibí una sola carta de Uds, pero creo que mañana voy a recibir otra. Todo muy lindo, la estoy pasando bien.</p>
+            <div class="handwritten">Saludos y Cariños Guillermo</div>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">30</div><div class="page-content">
+            <div class="header">8 de Marzo de 1972 - Postal desde Suiza</div>
+            <p>Postal 2: Skansen Lejonet (Postal de Suecia, escrita en Suiza)</p>
+            <p>Querida familia: ¡Estoy en Suiza! Mando una postal sueca (porque soy original). Esta tarde recibí su segunda carta, me ponen muy contento, aunque la verdad más contento de lo que estoy acá... difícil. Bueno, a lo concreto: El domingo me mudo al departamento donde vive mi amiga inglésa, porque de aca me rajan porque ahora vienen turistas (No se preocupen que yo duermo en una pieza y élla en otra). Me hice amigo de una señora sueca que está en clase de francés conmigo y tiene un amigo que dirige una cadena de hoteles así que seguro que me consigue trabajo para el mes que viene (ella tampoco puede creer que Suecia me guste tanto). El lunes mando carta "común", saludos y afines.</p>
+            <div class="handwritten">Guillermo</div>
+             <div class="notes-section">
+                <div class="notes-title">NOTAS SOBRE EL TEXTO</div>
+                <p class="note-item"><span class="note-ref">"Suecia me guste tanto":</span> Esta parte es clave. A primera vista la caligrafía es confusa (parece decir "sale puto"), pero por el contexto y analizando los trazos comparados con otras letras, claramente dice "guste tanto".</p>
+            </div>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">31</div><div class="page-content">
+            <div class="header">15 de Marzo de 1972 - La Vida en Lausana</div>
+            <p>Lausanne 15/3/71<br>Mon chere papa:</p>
+            <p>Avant tout, je te tiens que écrire que ma Français parlé est mieux que ma Française ecrit. Je peux se comprendre practiquement tout ce que je lis et maintenant j’ai commencé a comprendre quand ils parlent à la TV ou la cinema. Les cours à la Berlitz sont vites et je croix que será une bonne idée finir les cours complets; parce qu’on ait besoin de troix mois pour les finir, et ils sont commencés le 1er Fevrier et ils finiroit au fin du mois d’Avril. Et peut être que je peux travailler et étudier en meme temp. C’est facil d’entrer à travailler comme un garçon d’Hotel ou quelque chose similaire. J’ai connu une madame suéde dans le cours de française et elle m’ai dit qu’elle tient un ami qui est “el capo” d’un chain d’hotels et qui peut “conseguir” quelque travail.</p>
+            <div class="photo-frame"><img src="LibroEuropa/foto8.png" alt="AUTO EXPOSICION"></div>
+            <div class="caption">Auto en Expo Ginebra</div>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">32</div><div class="page-content">
+            <p>A’ Lausanne c’est une difficulté pour louer une appartement, heureusement grâce à mon amie Anglaise j’ai trouvé une piéce chez une elle.</p>
+            <p>Un peu plus en Française et puis je change à l’español. Le dimanche dernière nous sommes allés (avec tout le group d’amis que j’ai) a Genéve pour voir la 19éme exposition internazional de la voiture, ¡mamma mia quels bagnoles!</p>
+            <p>Querida mama y hermanito degenerado (que todavía no me escribió ni j) Como ya conté arriba me mudé el Lunes 13 a un departamento que es bueno y barato, está en lo que sería Corrientes, Maipú en Buenos Aires, o sea una cuadra de la calle Floride! Es un departamento con tres piezas, baño y cocina, en una pieza vive Madame, que es una señora de unos 55 años muy buena y sumamente amable, en la otra vive mi amiga Ingles y en la otra estoy yo.</p>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">33</div><div class="page-content">
+            <p>Cuando me mudé le dije a la señora que me iba a quedar hasta el 1° de Abril, porque al principio no le gustó la idea de tener hombre en la casa pero con paciencia y buena voluntad (y francés rebuscado, porque no habla otro idioma) la convencimos. Como acá tengo pila de amigos, y todos gente de lo mejor que podés pedir, voy a volver a trabajar acá porque es ridículo que, estando en un buen departamento, en una ciudad estupenda llena de estudiantes y con amigos asi, me vaya a otro lado.</p>
+            <p>Además uno de estos amigos (un Suizo-San Salvadoreño que tiene 20 años y está casado y estudia Business Adm.) estuvo el año pasado trabajando en un hotel y me puede conseguir trabajo, asi nomás, ganando de entrada 700 francos de sueldo y dice que por lo menos te haces otros 600 de propinas, 1300 francos en tot!! que serían más de 300.000 $ argentinos.</p>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">34</div><div class="page-content">
+            <p>Claro que no es lo mismo porque acá todo te lo cobran y además un ojo de la cara. Para darles una idea hacen falta 700 francos por mes para dormir, comer y moverse viviendo justo, justo (700 fr. = 175.000 $). Por ahora con el dinero me va lo más bien, claro que tuve unos cuantos gastos extras, comprando cosas que realmente me hacen falta como ser una toalla, salida de baño, jabón, medias, vitaminas (eso si estoy tomando vitaminas porque la comida no es lo que se puede llamar bien balanceada (aunque muy buena) entonces más vale prevenir que curar) y otras cosas más. Pero igual cuando empiece a trabajar + el dinero que tengo me va a quedar de sobra.</p>
+            <p>Siguiendo con el tema (pienso volver a trabajar acá) le hablé esta tarde a la señora y le explique y me dijo que no es de la idea de tener hombres en el depto. pero como yo era tan...amable y gentil (se te cae la baba mami) me lo iba a reservar hasta que volviese (me iré el 2/4 y volveré el 7/4 + o -).</p>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">35</div><div class="page-content">
+            <p>Acá cuando conseguís departamento o algo tenes que poco menos que hacer un sacrificio a los Dioses, porque es i-m-p-o-s-s-i-b-l-e. Tengo un amigo que estaba conmigo en Près de Vidy y el 21 de este mes se tiene que ir de ahi, hace un mes que está tratando de conseguir algo y no puede.</p>
+            <div class="photo-frame"><img src="LibroEuropa/foto9.png" alt="LAUSANNE"></div>
+            <div class="caption">Place de la Riponne- Lausanne</div>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">36</div><div class="page-content">
+            <p>Se anotó en agencias pero si por ejemplo el va a ver un depto. y le gusta pero también va un suizo y le gusta se lo dan al suizo; asi él sea el primero en ver el departamento y se levante a las 5 de la mañana. Yo el mío lo conseguí porque hablé directamente con la dueña que si no ya estaba durmiendo en caños.</p>
+            <p>Tengo que dar gracias porque hasta ahora todo salió a pedir de boca y espero que siga así porque si por una de esas me rechazan en el servicio y me tengo que volver me muero! Con esto no quiero decir que no quiero volver más pero por lo menos quedarme 6 o 7 meses. Les cuento un poco de los amigos porque realmente son extraordinarios. Primero conocí a esta chica inglesa en el Berlitz que es archimuchísima y me ayudó mucho, ella me presentó a un colombiano de 24 años que estudia en Berlitz y que es el que vive en Près de Vidy (que ahora tiene el problema de alojamiento).</p>
+            <p>Despues me presentó a una pareja de Colombianos que también estudian acá becados por el gob. Suizo, ella tiene 27 y el 28 y te aseguro que ella es igual a vos en buenisima, simpática y cuando habla con un acento colombiano es encantadora el otro día me preparó un pastel de papas igualito al que hacés, y el oso un pan de dios parece Mr Eugbäck.</p>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">37</div><div class="page-content">
+             <p>[Ilegible] por ellos conocí a esta pareja de Santalvadoreños que también son gente extraordinaria. Y después conocí a un Suizo-Colombiano que es huérfano y esta estudiando Seguros también becado por el gob. Suizo. Estos son los amigos mis directos después conozco Andorranos, Uruguayos, Bolivianos, Franceses, Norteamericanos, Españoles, Malgachenses, etc. Como ves mami estoy como en casa lo unico que me falta es algun gritito de vez en cuando para que ordene las cosas y alguna buena comida de Lidia. Que tal Lidia como está? Siempre gritándole a Nelo? Me parece bien. De vez en cuando hágale algunos panqueques para que los coma por mí. Después cuando tenga algun ratito libre cuénteme como le gusto el carnaval de la Republica Correntina.</p>
+             <div class="handwritten">Muchos abrazos, Guillermo.</div>
+             <p>Mi vida diaria ahora consiste en levantarme a las 7 ½ o 8 (depende si me baño o no, porque acá es todo un trámite bañarse, hay que llenar toda la bañadera porque no hay ducha) despues tomo el desayuno, que me lo preparo en mi pieza, despues voy a clases (9 h) a las 10.15 salimos a tomar algo después entro hasta las 12 hs. Despues tomamos el omnibus y vamos a comer al comedor universitario donde está todo el mundo. Y a la tarde hay variantes: leo en francés algunos libros o el diario, leo en inglés, salgo de compras, vamos a pasear, hago los deberes de frances, escribo, seco fotos, duermo una siestita, en fin siempre hay algo que hacer. Bueno espero que no se quejen después de semejante carta.</p>
+             <div class="handwritten">Saludos, besos, cariños a todos Guillermo</div>
+             <br>
+             <p style="font-size:0.8rem; color:#666;">[Texto escrito en el margen izquierdo de la hoja 4]: Recibí la carta en francés.</p>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">38</div><div class="page-content">
+             <div class="notes-section">
+                <div class="notes-title">NOTAS Y ACLARACIONES</div>
+                <p class="note-item"><span class="note-ref">"Pila de amigos":</span> Mucha cantidad de amigos.</p>
+                <p class="note-item"><span class="note-ref">"Se te cae la baba":</span> Estar muy orgulloso o encantado con alguien.</p>
+                <p class="note-item"><span class="note-ref">"Archimuchísima":</span> Un superlativo inventado, coloquial.</p>
+                <p class="note-item"><span class="note-ref">"Todo salió a pedir de boca":</span> (Pág 3): Todo salió perfectamente.</p>
+                <p class="note-item"><span class="note-ref">"Durmiendo en caños":</span> (Pág 3): Expresión figurativa para decir durmiendo en la calle o bajo un puente.</p>
+                <br>
+                <div class="notes-title">ACLARACIONES</div>
+                <p>En la página 1, la sección en francés contiene errores gramaticales ("ma Français" en lugar de "mon Français", "je te tiens que écrire", etc.), tal como el propio autor admite que su francés escrito no es perfecto. Lo he transcrito con los errores originales.</p>
+                <p class="note-item"><span class="note-ref">"Bagnoles"</span> (Pág 1) es argot francés para "coches" o "autos".</p>
+                <p class="note-item"><span class="note-ref">"Malgachenses"</span> (Pág 4): Parece ser un gentilicio mezclado por el autor para referirse a los habitantes de Madagascar (malgaches).</p>
+                <p>En la página 3 al final, la palabra antes de "por ellos" es difícil de leer con certeza, parece decir "Rezá" o "Alta", pero dada la dificultad la marqué como ilegible.</p>
+            </div>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">39</div><div class="page-content">
+            <div class="header">27 de Marzo de 1972 - Inquietudes y Futuro</div>
+            <p>Lausanne 27/3/72 [Lausana, Suiza]<br>Mes chères parents et frère: [Francés: Mis queridos padres y hermano]</p>
+            <p>Recibí dos cartas de México y una postal que más que postal parecía un afiche. Enteréme de la situación en la Argentina (Asunto Salustro) [1] y realmente tengo miedo por Uds. más ahora que me decís que la huelga fue de 3 semanas y que la echaron a 34 obreros. ¡Por lo que más quieran cuídense! Y esto va en serio pa [2] que realmente me dio miedo y cada dos por tres tengo pesadillas.</p>
+            <div class="photo-frame"><img src="LibroEuropa/foto15.png" alt="FOTO SUGERIDA: UNIVERSIDAD LAUSANNE"></div>
+            <div class="caption">Universidad de Lausana</div>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">40</div><div class="page-content">
+            <p>Efectivamente el Lunes 3 me voy a Winterthur [3] para el 4 dar el exámen, creo que todo va a ir bien, parece que no son muchos los que rechazan y además creo que Spichiger tiene una cuña (porque aunque te parece mentira la palanca acá en Suiza corre, y de lo lindo!) [4] porque el asunto principal es ver si me lo dejan hacer en Julio, porque esta revisión es para los que entran en Feb '73. Si me llegan a decir que lo tengo que hacer en Febrero no se lo que hago.</p>
+            <p>Porque sinceramente no tengo muchas ganas de volver, además acá es muy fácil conseguir una beca del gobierno suizo para estudiar, la carrera de Administración de Empresas que dictan acá en Lausanne dura 3 años, y en 7 u 8 meses se puede aprender bien Francés o lo suficiente como para asistir a los cursos porque yo estuve hablando con algunos amigos que estuvieron en las mismas condiciones que yo (de lengua) y les va lo más bien. De todas maneras esta semana me pongo en campaña para averiguar bien todo este asunto para poder estar bien seguro de lo que hago.</p>
+            <p>En caso que la pueda hacer en Julio no hay problema porque me vengo acá y sigo trabajando. Bueno en fin no se asusten mucho por lo que escribo en ésta carta (en especial mami) porque son sólo planes y las cosas pueden cambiar mucho. De todas maneras la situación en la Argentina no es nada buena supongo?</p>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">41</div><div class="page-content">
+            <p>Me alegro que la pasen bien en México y saludos a Isaak. No se hagan problemas por mi porque los amigos que tengo son gente excepcional y cuando tenés dificultades te pueden ayudar tanto como un hermano. Hablando de hermano supongo que mami ahora respirará tranquila ya que Nello [5] está en 5to, porque es el único año que no se puede repetir. A ver si se decide a seguir algo o piénsa un poco las cosas porque éste es el último año que se la pasa de arriba [6].</p>
+            <p>Miren no tengo la menor idea de cuantas cartas les escribí y que es lo que les escribo asi que si repito cosas no se asusten que no perdí la memoria. Pero es que me paso escribiendo a todo el mundo. Pero de ahora en adelante solo escribo a los que me escriben porque todo el mundo tiene mi dirección asi que no hay excusa.</p>
+            <p>El fin de semana anterior (20, 21/3) fui a Interlaken pero creo que esto se los conté, bueno igual es muy lindo. Este fin de semana no hice mucho, solo vida hogareña, cociné para unos amigos en la casa de esta pareja de Colombianos y quedaron maravillados con los huevos revueltos con tomates y jamón, y la salsa que me mandé [7] para el arroz (gracias a lo que aprendí de mami) y para el fin de semana que viene les prometí arroz a la cubana. Esto es porque los fines de semana el comedor universitario cierra y sale muy caro ir a un restaurante, entonces nos juntamos algunos en algún departamento y cocinamos.</p>
+            <p>[Ilegible] por ellos conocí a esta pareja de Santalvadoreños que también son gente extraordinaria. Y después conocí a un Suizo-Colombiano que es huérfano y esta estudiando Seguros también becado por el gob. Suizo. Estos son los amigos mis directos después conozco Andorranos, Uruguayos, Bolivianos, Franceses, Norteamericanos, Españoles, Malgachenses, etc. Como ves mami estoy como en casa lo unico que me falta es algun gritito de vez en cuando para que ordene las cosas y alguna buena comida de Lidia. Que tal Lidia como está? Siempre gritándole a Nelo? Me parece bien. De vez en cuando hágale algunos panqueques para que los coma por mí. Después cuando tenga algun ratito libre cuénteme como le gusto el carnaval de la Republica Correntina.</p>
+             <p>Acá hago más o menos vida de casado, pero me está gustando cada vez menos, a veces la inglesa se mete en el baño y está como dos horas maquillándose y arreglándose, y si hay una cosa sagrada para mi es el baño asi que a veces me enchincho [8]. La señora del departamento se fue a Col de Mosses [9] por dos semanas asi que podemos usar la cocina, ver televisión, etc.</p>
+            <p>Bueno espero que hayan pasado una feliz Pascua y mandenle muchos saludos a Lidia.</p>
+            <div class="handwritten">Cariños y Abrazo fraternal Guillermo Willie</div>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">42</div><div class="page-content">
+             <div class="notes-section">
+                <div class="notes-title">NOTAS Y ACLARACIONES (CARTA XI) - Parte 1</div>
+                <p class="note-item"><span class="note-ref">[1] Asunto Salustro:</span> Se refiere al secuestro del empresario Oberdan Sallustro por el ERP (Ejército Revolucionario del Pueblo) en Argentina, ocurrido el 21 de marzo de 1972 (días antes de esta carta). Fue un hecho de enorme conmoción política.</p>
+                <p class="note-item"><span class="note-ref">[2] Pa:</span> Coloquialismo para "para".</p>
+                <p class="note-item"><span class="note-ref">[3] Winterthur:</span> Una ciudad en el cantón de Zúrich, Suiza.</p>
+                <p class="note-item"><span class="note-ref">[4] Cuña / Palanca:</span> Términos muy coloquiales (especialmente en Argentina/Uruguay) para referirse a tener influencias, contactos o "acomodo" para conseguir algo.</p>
+            </div>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">43</div><div class="page-content">
+             <div class="notes-section">
+                <div class="notes-title">NOTAS Y ACLARACIONES (CARTA XI) - Parte 2</div>
+                <p class="note-item"><span class="note-ref">[5] Alelo:</span> Parece ser el apodo del hermano (probablemente Alejandro o similar). La caligrafía es un poco ambigua pero parece decir "Alelo".</p>
+                <p class="note-item"><span class="note-ref">[6] De arriba:</span> Expresión coloquial que significa vivir gratis, sin esfuerzo o mantenido por otros.</p>
+                <p class="note-item"><span class="note-ref">[7] Me mandé:</span> Coloquialismo argentino que en este contexto significa "preparé" o "hice" (generalmente con orgullo o improvisación).</p>
+                <p class="note-item"><span class="note-ref">[8] Enchincho:</span> Del verbo "enchisparse" o "enchiripa", pero más comúnmente "enchincharse" en el Río de la Plata, significa ponerse de mal humor, fastidiarse o irritarse.</p>
+                <p class="note-item"><span class="note-ref">[9] Col de Mosses:</span> Probablemente se refiere al Col des Mosses, un paso de montaña en los Alpes suizos, cercano a Lausana, conocido por ser una estación de esquí.</p>
+            </div>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">44</div><div class="page-content">
+            <div class="header">1 de Abril de 1972 - La decisión de estudiar en Suiza</div>
+            <p>Laussanne 1 de Abril (año en curso)<br>Dear momma, poppa and brothah. [1]</p>
+            <p>Ahora que estoy un poco más ubicado, (creo que ayer escribí la otra carta, pero Uds. se merecen esto y mucho más) voy a ver si les cuento algo de todo lo que tengo que contar. El miércoles 23 fui a Pfungen[2] por primera vez, a Vati y a Mami les escribí sobre este asunto asique para ahorrar tiempo pregúnteles.</p>
+            <div class="photo-frame"><img src="LibroEuropa/foto16.png" alt="FOTO SUGERIDA: LUCERNA"></div>
+            <div class="caption">Lucerna</div>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">45</div><div class="page-content">
+            <p>El jueves fui a dar una vueltita por Zurich con Trudy. Cuando caminas por el Banhoffstrasse [3] no sabés si estás en Bs As o acá, es muy parecido. El viernes fui a Schaffhausen con Trudy, es muy lindo, fuimos a un castillo y despues comimos una pizza por ahí. El sábado Trudy y Jack se fueron a S. Gall [4] entonces me fui a Pfungen y estuve desde las 3hs hasta las 10hs en la casa de Henri.  El domingo Susan nos invitó a almorzar, despues de comer dimos una vueltita por la campiña (caminando como buenos suizos). El lunes no hice un corno [5] y el martes me vine para acá.</p>
+            <p>En casa de Henri me divertí muchísimo, estaban también Hans y Lotti. (Como ya expliqué en la carta a Vati). Henri es una copia con el mismo molde de Vati, los mismos chistes, el mismo humor hasta tienen los mismos movimientos, estoy seguro de que si Henri hablara castellano diría: “Mire Billito" [6]. Hans es macanudo, y estuve hablando bastante con él. y Lotti es adorable, y aunque con la madre (Lotti grande) no pude hablar mucho igual me gustó y se rompía toda [7]. En resumen: parientes que hay que conocer.</p>
+            <p>Después Susan no es la simpatía personificada, pero conmigo se portó lo más bien y comimos una rica comida y me atendio de lo mejor. No se si será porque está casada o qué pero ni miras de lo que me pintaron. El esposo es agradable. [PD: Me pesqué un resfrío, pero va en mi mejoría, para el tiempo que llegue la carta ya habré pasado. PD: Papi vos que andás con guita mandame todas las cartas x expreso asi llegan antes. [8]</p>
+            <p>Todos los lugares que visité me gustaron mucho en especial los alrededores de Berna con las granjas típicas, que realmente son casas que yo pensaba que solo se veían en folletos de turismo. ¡En fin!</p>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">46</div><div class="page-content">
+            <p>Ya les conté + o - todo lo que hizo Spichiger por mi y encima ahora cuando vuelva a Winterthur [9] quiere llevarme a Luzern y Konstanz, yo creo que en vez de regalarle un jabón habría que haberle dado montura con caballo y todo. Lo único que encuentro a disgusto en la segunda patria son los alemanes. Ya sé, Papi [10], que no se puede generalizar y que hay de todo (y aparte recién hace 2 días que estoy) pero no me podes negar que la mayoría son bastante secos y no extremadamente cordiales. Aparte en Suiza también estuve 10 dias nomás y el contraste es tremendo. Aunque hoy estuve en unos cuantos negocios acá en Lausanne y son mucho mas simpáticos que los suizos alemanes.</p>
+            <p>Esta mañana me vino a buscar M. Ringger y me llevó a Berlitz me inscribí y comencé el curso. Ya me hice algunos amigos que me informaron de las "tangas" estudiantiles [11]. Ah! nunca vi tantos sudamericanos juntos como acá en Laussane. Pero, oh caracoles! [12] no hay ningún argentino, y todo el mundo te dice lo mismo que argentinos no hay por ningún lado. Soy original.</p>
+        </div></div>
+        
+        <div class="page" data-density="soft"><div class="page-num">47</div><div class="page-content">
+             <p>Me hice amigo de una chica inglesa que me ayudó a hacer las compras y me llevó a lugares donde sirven comida para estudiantes y podes morfar y deglutir [13] como un chancho por 4 francos (que acá es baratísimo). Yo calculo que en comidas gastaré 10 o 12 francos por día y, más el alojamiento 9 francos son 19 - 20 francos/dia lo que hacen un total de 600 francos/mes, que a niveles argentinos es un afano [14] pero que acá es lo más barato que podés conseguir. Dame tu sabia opinión paternal al respecto.</p>
+            <p>Podría seguir escribiendo pero no quiero crearles un vicio (no te podés quejar mami). Antes de despedirme por 4 o cuatro días les puedo adelantar que acá estoy contentísimo, parece una ciudad donde no hay gente mayor (por no decir jovatos) [15] está lleno de estudiantes por cualquier lado. Sin más me despido de la presente.</p>
+            <div class="handwritten">Salúdalos atte. Guillermo Bone.</div>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">48</div><div class="page-content">
+             <div class="notes-section">
+                <div class="notes-title">NOTAS Y ACLARACIONES (CARTA XII) - Parte 1</div>
+                <p class="note-item"><span class="note-ref">[1] Saludo en inglés:</span> Escribe de forma fonética y juguetona ("brothah" en lugar de brother).</p>
+                <p class="note-item"><span class="note-ref">[2] Pfungen:</span> Probablemente cerca de Zúrich. Donde nació el abuelo del escritor.</p>
+                <p class="note-item"><span class="note-ref">[3] Banhoffstrasse:</span> Se refiere a la Bahnhofstrasse de Zúrich, una de las avenidas comerciales más caras y famosas del mundo.</p>
+                <p class="note-item"><span class="note-ref">[4] S. Gall:</span> Se refiere a la ciudad de San Galo (St. Gallen).</p>
+                <p class="note-item"><span class="note-ref">[5] No hice un corno:</span> Expresión muy coloquial argentina que significa "no hice nada".</p>
+                <p class="note-item"><span class="note-ref">[6] Mire Billito:</span> "Billito" parece ser el apodo familiar de Guillermo (diminutivo de Bill).</p>
+                <p class="note-item"><span class="note-ref">[7] Se rompía todo:</span> Frase coloquial algo ambigua en este contexto, probablemente signifique que la señora se desvivía por atenderlo o se reía mucho ("romperse de risa").</p>
+                <p class="note-item"><span class="note-ref">[8] Guita:</span> Dinero (lunfardo rioplatense). Pide que le envíen cartas por correo rápido ("expreso").</p>
+                <p class="note-item"><span class="note-ref">[9] Winter.:</span> Abreviatura de Winterthur.</p>
+                <p class="note-item"><span class="note-ref">[10] Pepi:</span> Parece ser un apodo cariñoso para dirigirse a su padre ("Papi" modificado).</p>
+            </div>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">49</div><div class="page-content">
+             <div class="notes-section">
+                <div class="notes-title">NOTAS Y ACLARACIONES (CARTA XII) - Parte 2</div>
+                <p class="note-item"><span class="note-ref">[11] Tongas:</span> Trucos, atajos o arreglos para conseguir cosas más baratas o fáciles.</p>
+                <p class="note-item"><span class="note-ref">[12] Oh caracoles!:</span> Exclamación cómica (popularizada por la traducción de los cómics de Batman en la época).</p>
+                <p class="note-item"><span class="note-ref">[13] Morfar y deglutir:</span> "Morfar" es lunfardo para comer. "Deglutir" es tragar. Enfatiza que comió mucho y con avidez.</p>
+                <p class="note-item"><span class="note-ref">[14] Afano:</span> Robo (lunfardo). Aquí se usa para decir que el precio es excesivamente caro comparado con Argentina.</p>
+                <p class="note-item"><span class="note-ref">[15] Jovatos:</span> Término lunfardo algo despectivo o coloquial para referirse a personas ancianas o viejas.</p>
+            </div>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">50</div><div class="page-content">
+            <div class="header">4 de Abril de 1972 - El examen médico militar</div>
+            <p>Winterthur 4/4/72<br>Querida Familia:</p>
+            <p>Les escribo esta carta rápido, porque no quiero que me cierren el correo. Esta mañana a las 7.30 fui al centro commando  donde me harían la revisación. Nos hicieron formar a todos (eramos unos 30) y un general empezó a dar indicaciones en alemán, habló durante 15 minutos, cuando terminó llamaron mi nombre (yo era el primero en la lista) y yo dije en francés, que no sabía que hacer, ahí mismo todo el mundo se entró a reventar de risa porque parece que antes había dicho como 4 veces lo que había que hacer, para que nadie le preguntara de nuevo.</p>
+            <div class="photo-frame"><img src="LibroEuropa/foto17.png" alt="FOTO SUGERIDA: SOLDADO SUIZO"></div>
+            <div class="caption">Soldado Suizo años 70</div>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">51</div><div class="page-content">
+            <p>Bueno, en fin, hice las pruebas físicas, salto, carrera, trepar y tirar una granada, y las hice muy bien porque por eso saqué una "mención de honor". Después me sacaron sangre, revisaron la vista, los oídos, peso, altura, pecho y bolas. Y me declararon "apt pour service". Gracias a Dios un general ahí hablaba como 7 idiomas entonces le pude explicar mis penas y preocupaciones. Me dijeron que me iban a mandar con un pelotón francés y probablemente a Lausanne. Le llamó la atención que me haya venido de la Argentina para hacer el servicio y me dió las gracias y dijo que lo apreciaban mucho. Después tuve que hablar con otro para explicarle que quería entrar en Julio y me dijo (no hablaba muy bien francés pero el bueno de Jack me escribió una carta en alemán explicando todo) que en 4 días me iban a mandar una petición que yo debía llenar y mandar de vuelta. Ah! además me pusieron en "Infanterie Mitrailleur" que seguro voy a tener que laburar como negro.</p>
+            <p>Parece que todo está bastante claro, me aceptaron y voy a la parte Francesa; lo único es ver si entro en Julio o no, pero me dijeron que hay bastante posibilidad que si.</p>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">52</div><div class="page-content">
+            <p>Por ahora no se que hacer, espero que me contesten pronto el asunto de Julio; por lo menos hasta el lunes me quedo aquí porque este fin de semana Spichiger (creo que ya se los dije) me invitó a ir a Lugano. Y si no me pueden contestar pronto me vuelvo a Lausanne hasta nuevas noticias.</p>
+            <p>Carta de Uds no recibí más que las 2 de Mexico, la postal + 3 cartas de "Nellita". Junto con esta carta va una para él y otra para los Engbeck . Bueno, yo sigo lo más bien, acá con Trudy me divierto mucho. Llegué el viernes por la mañana, me trajo un amigo en auto. Ayer vinieron Susy y Lucas a almorzar, porque no se si saben el lunes es feriado acá.</p>
+            <p>Ahora voy a ver si unos de estos días la veo a Bertelli, creo que voy a ir con Henri a Zurich y la vamos a encontrar ahí. También por este bendito asunto de la colimba me perdí de ir a Austria con un grupo de amigos, pero qué “que le vacha che”.</p>
+            <p>Bueno, acá me despido, ah! y escriban rápido che, porque a vos mami …….también te gusta que te escriban. Espero la que hayan pasado lindo y ahora que volvieron a la Argentina  Terrorista , se me cuiden eh!</p>
+            <div class="handwritten">Sin otro particular me despido de Uds muy atte. Cariños y besos Guillermo</div>
+            <p>PD: A ver si le dicen a la abuela que me escriba aunque sea una pavada.</p>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">53</div><div class="page-content"></div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">54</div><div class="page-content">
+            <div class="header">13 de Abril de 1972 - Mudanza a Lausanne y contexto político</div>
+            <p>Lausanne 13/4/72<br>Querido Papa:</p>
+            <p>Hier matin j'ai reçu ton lettre. [Ayer a la mañana recibí tu carta]. Mais, ne les envovie plus a l'Ecole Berlitz, parce que j'ai fini l'Ecole le 30 du mois dernier, et n’en  vais plus. Dans l'enveloppe tu trouveras la nouvelle adresse. Je suis arrivé ici le mardi midi par train.Hier je suis allé au bureau de police pour faire le dépot de certificat d'origine, et maintenant ils  doivent m'envoyer un papier que me servira pour trouver un travail. Pas de problème pour trouver travail!</p>
+            <div class="photo-frame"><img src="LibroEuropa/foto18.png" alt="FOTO SUGERIDA: LAGO LUCERNA"></div>
+            <div class="caption">Lago de los Cuatro Cantones</div>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">55</div><div class="page-content">
+            <p>Le  Vendredi] dernier je suis allé a Zurich a la maison de M. Spichiger. J'ai passé un très jolie week-end. Le samedi nous sommes allés (avec M. Sp. et sa fille) au musée d'art moderne au matin, et a l'après midi je suis allé avec ça fille au cinèma. Le dimanche nous avons monté le mont Rigi qui est entre le lac de Zug  et le lac de Lucerne, après nous avons allés a Brunnen (près du lac de Zug) pour manger. Le lundi je suis parti a Winterthour. M. Spichiger sends you regards.</p>
+            <p>Bueno, ya me está doliendo la cabeza de escribir francés, además me sale para el lado de los tomates, espero que hayas entendido algo. También me enteré lo de Sallustro y el general Sanchez, y es una animalada! Acá hasta los diarios de extrema izquierda y tendencia trotskista dicen que es una barbaridad lo que el E.R.P. está haciendo.</p>
+            <p>Sobre el servicio militar ya te mandé una carta que seguro recibiste, pero todavía no me mandaron el formulario para solicitar el ingreso en Julio. Si no lo recibo antes de el viernes voy a llamarlo a Mr Spichiger para que mueva palancas .  No te preocupes porque no lo molesto, al contrario está contentísimo conmigo, porque el hijo es uno de estos despistados que hace dos años largó el colegio y ahora va a continuarlo; además se la pasa leyendo libros que recibe de las embajadas de China y Cuba; no dice "norteamericano" sino "imperialistas"; piensa que Cuba es el paraíso y que debe ser lindísimo lo que están haciendo en la Argentina. Mirá como será que el viejo le ofreció un pasaje gratis con estadía y todo a Cuba para que vea lo que es (pero, como es lógico, lo rechazó). Me dió lástima por Spichiger porque lo tiene preocupado y triste. Ya ni puede hablar con el hijo, dicen tres palabras y ya se pelean. No me acuerdo si les escribí, pero por las dudas lo pongo igual, sobre Bertelli.</p>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">56</div><div class="page-content">
+            <p>El miércoles de la semana pasada fui con Henri y Lotti a Zurich y nos encontramos con Bertelli en un bar de la Bahnhofstrasse.  Bueno no hace falta que te explique como me recibió y saludó, estaba muy contento con los jabones y no podía entender como un padre tan joven tiene un hijo tan grande. Después caminamos un poco por Zurich, me agarró el brazo y después de un ratito me pregunto si no me molestaba que me vieran del brazo con una vieja. Antes de despedirse me quería convidar con algo más entonces fuimos a comer "Schübligs" o algo por el estilo. Y a la noche fui a comer a la casa de Henri, estaba Cornelius también y después vino su  novia, la pase muy lindo.</p>
+            <p>15/7/ <br>Bueno me demoré un poco porque tuve que hacer. Ayer fuimos a esquiar (despues les cuento). Hoy me lo encontré a Jorge Arcich en el restaurant de casualidad, no lo podía creer. Te manda saludos.</p>
+            <div class="handwritten">Abrazos a todos, etc. Guillermo</div>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">57</div><div class="page-content">
+             <div class="notes-section">
+                <div class="notes-title">CONTEXTO HISTÓRICO Y POLÍTICO</div>
+                <p><strong>Contexto Político Argentino (Carta 3):</strong> Guillermo menciona con mucha indignación "lo de Sallustro y el general Sanchez". Se refiere a dos eventos de altísimo impacto en Argentina ocurridos en abril de 1972: Oberdan Sallustro: Director general de Fiat Concord en Argentina, fue secuestrado por el ERP (Ejército Revolucionario del Pueblo) y ejecutado el 10 de abril de 1972. Juan Carlos Sánchez: General de División asesinado también el 10 de abril de 1972, en una acción conjunta del ERP y las FAR.</p>
+                <p>La frase "Argentina 'Terrorist’” al final de la carta es un juego de palabras con "Terrorist" y refleja el clima de violencia política de la época.</p>
+                <p><strong>Servicio Militar Suizo:</strong> Se nota la preocupación por entrar en julio ("el asunto de Julio"). La "Infanterie Mitrailleur" (Infantería de Ametralladoras) a la que fue asignado era una posición físicamente exigente, lo cual coincide con su comentario "voy a tener que laburar como negro".</p>
+            </div>
+        </div></div>
+
+        <div class="page" data-density="soft"><div class="page-num">58</div><div class="page-content">
+             <div class="notes-section">
+                <div class="notes-title">NOTAS DE IDIOMA Y CULTURA</div>
+                <p><strong>Idioma:</strong> Es interesante cómo intercala francés y español ("Spanglish" o "Fragnol"). Frases como "hier matin j'ai reçu ton lettre" (ayer a la mañana recibí tu carta) muestran su inmersión en el idioma, aunque él mismo admite jocosamente que le sale "para el lado de los tomates".</p>
+                <p><strong>Schübligs:</strong> Mencionado en la carta 2, el Schüblig es una salchicha ahumada tradicional suiza, muy popular en la parte alemana (Zurich/Winterthur).</p>
+                <p><strong>Que vachache:</strong> Al final de la carta 3, escribe “que vachache “. Es una fonetización humorística típica resignación argentina ante un inconveniente.</p>
+            </div>
+        </div></div>
+
+        <div class="page cover" data-density="hard" style="border-left:5px solid #c49000; border-right:none;">
+            <div style="border:2px solid #fff; padding:10px; text-align:center;">ARCHIVO FAMILIAR BONA</div>
+            <div class="cover-img"><img src="LibroEuropa/contratapa.png" alt="CONTRATAPA"></div>
+            <div style="text-align:center; margin:auto; font-style:italic;">"Desde que nací es la cosa más feliz que me aconteció."</div>
+            <div style="text-align:center; font-weight:bold;">DIGITALIZADO 2025</div>
+        </div>
+    </div>
+
+    <div class="controls-container">
+        <button class="nav-btn" id="prev" title="Anterior">&#8592;</button>
+        <button class="index-btn" onclick="flip(2)">ÍNDICE</button>
+        <button class="nav-btn" id="next" title="Siguiente">&#8594;</button>
+    </div>
+
+    <script>
+        let pageFlip;
+        // Datos simples para el buscador
+        const pageTexts = {
+            4: "vuelo comida europa nublado zurich avion nieve campos montaña aeropuerto copenhagen niebla suecia arlanda estocolmo",
+            5: "information nota amiga nick direccion hotel omnibus taxi 1600 afano",
+            6: "carta telefono centro florida pieza 3m 7m cama escritorio ropero lavatorio ventana calle 4hs 5 y media señora macanuda almorzar 6 noche 3500",
+            7: "fondo 3 dias 10 coronas 8000 barato limpisimo temperatura -2 frio negocios limpios ordenados gente loca semaforo",
+            8: "pelo corto hombros cena vino lomo cafe increible roñosos melenudos asombro 20 minutos heroina inyecciones gritaba corria drogados tak gracias amable",
+            9: "15 de febrero gotemburgo martes 15/2/72 sabado restaurant 25 años vuelta centro compromisos cansado television olimpiadas sapporo wasa skansen smorgasbord",
+            10: "lunes avion demora goma pinchada torslanda inga anna comida china fabrica skf",
+            11: "ciudades buenos aires borrachos techo fin de semana subtes transporte organizado secretaria holmqvist",
+            12: "paquete gruffman bo overgaard contento macanudo trabajo erlenson fabrica bolillas jaulas montaje cederwall",
+            13: "hospitalidad suizo piola tarjeta zurich copenhague jensen quinoto fe pais parientes",
+            14: "plata amarrocar kilos vitaminas",
+            15: "21 de febrero resumen semanal visita fabrica miercoles johann cederwall auto molndal frolunda torg gota alv gunnebo castillo",
+            16: "jueves paseo charlotte novio simpatico viernes teleobjetivo chiches anita jabones",
+            17: "sabado puerto frederikhaven lars scandinavium jesus christ superstar discoteca medicina domingo estacion despedir anna",
+            18: "aerograma lunes 21 gunell ulcera kungsbacka costa",
+            20: "22 de febrero zurich martes 22/2/72 carta 4 6.20 trudy saab departamento cama nelo jack registro militar",
+            21: "pruebas test comprension frances 20 de marzo 15 de abril rechazado servicio febrero 73 julio 73 bs as gobierno pasaje",
+            22: "optimistamente 1 mes spichiger 2hs vuelta opinion suiza francesa neuchatel lausanne ginebra colegio crash-course",
+            23: "precios trabajo post-boy lavaplatos pinche",
+            24: "plata 4000 francos experiencia marca mayor feliz acontecio",
+            25: "in god i trust guillermo bonasson palmstrasse",
+            26: "29 de febrero winterthur martes 29/2/72 tren mercedes benz lenzburg solothurn berna neuchatel oficina ringger berlitz",
+            27: "pension foyer de vidy bungalows madera teja calefaccion toalla comida barata",
+            28: "13 dias jack antipatico",
+            29: "datos curso francos henri hans",
+            26: "sabado 26/2/72 carta corta suecia planes pension lausanne auto zurich",
+            27: "agradecimiento rompiendo verguenza winterthur examenes colimba libreta militar pfungen suizo-español maria",
+            28: "folletos lecciones francos barato trabajar caro",
+            31: "lausanne 5-3-72 resfrio berlitz costo vida franco esquiar le chemossaire",
+            32: "esquies pista gstaad",
+            33: "lausanne 15/3/71 mon chere papa francais ecrit berlitz travailler",
+            34: "appartement geneve voiture bagnoles",
+            35: "mama hermanito degenerado departamento corrientes maipu pila amigos",
+            36: "sueldo propinas francos gastos vitaminas",
+            37: "sacrificio dioses pres de vidy",
+            38: "amigos ingles colombiano suizo-colombiano",
+            39: "andorranos uruguayos bolivianos lidia panqueques carnaval",
+            40: "vida diaria clases comedor universitario",
+            41: "notas coloquialismos rioplatenses pila baba archimuchisima caños",
+            42: "1 de abril 1972 decision estudiar examenes octubre bachillerato sciences economiques",
+            43: "matematicas historia geografia beca 1200 francos",
+            45: "4 de abril examen medico militar centro commando general mencion de honor sangre oidos",
+            46: "infanterie mitrailleur lugano trudy susy lucas bertelli austria",
+            49: "13 de abril mudanza contexto politico certificado origen trabajo museo arte moderno mont rigi",
+            50: "sallustro general sanchez erp",
+            51: "schubligs jorge arcich"
+        };
+
+        function search() {
+            let q = document.getElementById('sInput').value.toLowerCase();
+            let l = document.getElementById('sList'); l.innerHTML = '';
+            if(q.length<3) return;
+            for(let [p,t] of Object.entries(pageTexts)) {
+                if(t.includes(q)) {
+                    let li = document.createElement('li'); li.innerText = 'Ir a Pág ' + p;
+                    li.onclick = (e) => { stop(e); flip(parseInt(p)); };
+                    l.appendChild(li);
+                }
+            }
+        }
+
+        function stop(e) { e.stopPropagation(); }
+        function flip(n) { pageFlip.flip(n); }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const el = document.getElementById('book');
+            pageFlip = new St.PageFlip(el, {
+                width: 550, height: 780, size: 'fixed',
+                minWidth: 300, maxWidth: 1000, minHeight: 400, maxHeight: 1000,
+                showCover: true, mobileScrollSupport: false, // Fix para iPad
+                useMouseEvents: true,
+                maxShadowOpacity: 0 // Elimina sombra fantasma
+            });
+            pageFlip.loadFromHTML(document.querySelectorAll('.page'));
+            
+            document.getElementById('prev').onclick = () => pageFlip.flipPrev();
+            document.getElementById('next').onclick = () => pageFlip.flipNext();
+        });
+    </script>
+</body>
+</html>
